@@ -46,6 +46,22 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE `analyze` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `deviceid` varchar(255) DEFAULT NULL,
+  `condition` varchar(255) DEFAULT NULL,
+  `state` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `calendar` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `deviceid` varchar(255) DEFAULT NULL,
+  `time` varchar(255) DEFAULT NULL,
+  `code` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 insert into devicetype (name,type,power,voltage) values ("A1","AirConditioner","1000","220");
 insert into devicetype (name,type,power,voltage) values ("A2","AirConditioner","1500","220");
 insert into devicetype (name,type,power,voltage) values ("L1","Light","20","220");
