@@ -19,9 +19,47 @@ public class AnalyzeDao implements AnalyzeRepository {
     public void analyze(String deviceId,String code){  //用户的设备使用记录分析
         //1. 分析用户在湿度为多少时，喜欢开加湿器
 
+        //若是空调，则operation是PowerOn才进行分析
+
     }
 
-    public void analyzeHumidifier(String deviceId,String code){    //分析加湿器的数据
+    public void analyzeAirConditioner(String deviceId,String code){ //析用户在几度以上/以下的时候喜欢开空调，并且是开几度
+        String operation=code.split("_")[1];       //只有是PowerOn才执行此分析
+        String sql = "select code from operation where deviceid=\"" + deviceId + "\" and code like \"%"+operation+"%\";";  //寻找该设备的所有PowerOn的操作记录
+        List<String> codes=jdbcTemplate.queryForList(sql,String.class);
+
+        int ColdCurTmpSum=0;
+        int ColdSetTmpSum=0;
+        int ColdCount=0;    //用户开冷气的次数
+        int HotCurTmpSum=0;
+        int HotSetTmpSum=0;
+        int HotCount=0;     //用户开暖气的次数
+        for(int i=0;i<codes.size();i++){
+            String[] splitCodes=codes.get(i).split("_");
+            int curTemperature=Integer.parseInt(splitCodes[2]);
+            int setTemperature=Integer.parseInt(splitCodes[3]);
+            if (curTemperature >= 20) {     //用户开的是冷气
+                ColdCurTmpSum=ColdCurTmpSum+curTemperature;
+                ColdSetTmpSum=ColdSetTmpSum+setTemperature;
+                ColdCount++;
+            } else {       //用户开的是暖气
+                HotCurTmpSum=HotCurTmpSum+curTemperature;
+                HotSetTmpSum=HotSetTmpSum+setTemperature;
+                HotCount++;
+            }
+        }
+        int coldCurTemperature=ColdCurTmpSum/ColdCount;
+        int coldSetTemperature=ColdSetTmpSum/ColdCount;
+        int hotCurTemperature=HotCurTmpSum/HotCount;
+        int hotSetTemperature=HotSetTmpSum/HotCount;
+        System.out.println("coldCurTemperature is "+coldCurTemperature);
+        System.out.println("coldSetTemperature is "+coldSetTemperature);
+        System.out.println("hotCurTemperature is "+hotCurTemperature);
+        System.out.println("hotSetTemperature is "+hotSetTemperature);
+
+    }
+
+    public void analyzeHumidifier(String deviceId,String code){    //析用户在湿度为多少的时候喜欢开、关加湿器
         System.out.println("Start analyzeHumidifier");
         String state=code.split("_")[1];
         System.out.println("state is "+state);

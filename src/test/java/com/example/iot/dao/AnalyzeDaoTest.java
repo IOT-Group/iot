@@ -18,4 +18,9 @@ public class AnalyzeDaoTest {
         analyzeDao.analyzeHumidifier("1","H_PowerOff_55");
         analyzeDao.analyzeHumidifier("1","H_PowerOn_25");
     }
+
+    @Test
+    public void analyzeAirConditionerTest(){
+        analyzeDao.analyzeAirConditioner("5","H_PowerOn_33_25");
+    }
 }
