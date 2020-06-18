@@ -1,10 +1,15 @@
 package com.example.iot.dao;
 
 import com.example.iot.dao.Repository.UserRepository;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
+@Mapper
+@Component
 public class UserDao implements UserRepository {
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Override
