@@ -66,6 +66,7 @@ CREATE TABLE `calendar` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 insert into devicetype (name,type,power,voltage) values ("A1","AirConditioner","1000","220");
+insert into devicetype (name,type,pnsert into devicetype (name,type,power,voltage) values ("A1","AirConditioner","1000","220");
 insert into devicetype (name,type,power,voltage) values ("A2","AirConditioner","1500","220");
 insert into devicetype (name,type,power,voltage) values ("L1","Light","20","220");
 insert into devicetype (name,type,power,voltage) values ("L2","Light","50","220");
