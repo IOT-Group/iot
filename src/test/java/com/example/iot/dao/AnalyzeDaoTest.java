@@ -23,4 +23,10 @@ public class AnalyzeDaoTest {
     public void analyzeAirConditionerTest(){
         analyzeDao.analyzeAirConditioner("5","H_PowerOn_33_25");
     }
+
+    @Test
+    public void analyzeCurtainTest(){
+        analyzeDao.analyzeCurtain("6","C_PowerOff");
+        analyzeDao.analyzeCurtain("6","C_PowerOn");
+    }
 }

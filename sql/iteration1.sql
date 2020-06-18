@@ -10,6 +10,7 @@ drop table if exists calendar;
 
 CREATE TABLE `device` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` varchar(255) DEFAULT NULL,
   `type` varchar(255) DEFAULT NULL,
   `state` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -59,7 +60,7 @@ CREATE TABLE `analyze` (
 CREATE TABLE `calendar` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `deviceid` varchar(255) DEFAULT NULL,
-  `time` varchar(255) DEFAULT NULL,
+  `time` int(255) DEFAULT NULL,
   `code` varchar(255) DEFAULT NULL,
   `isFinished` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
