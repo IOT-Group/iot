@@ -4,5 +4,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FaceRecognition {
-    public void recognition_string(String input,int id);
+    public void recognition_string(String input,String username,String timeInterval);
 }

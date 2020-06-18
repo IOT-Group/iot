@@ -1,13 +1,26 @@
 package com.example.iot.service;
 
 import com.example.iot.service.Voice.AnalyzeVoice;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class VoiceService implements AnalyzeVoice {
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     @Override
-    public void analyzeVoice(String voice_input,int id) {
+    public void analyzeVoice(String voice_input,String username) {
+
+        String sql="SELECT id from user where username='"+username+"'";
+        List<String> user=jdbcTemplate.queryForList(sql,String.class);
+
+        int id=Integer.valueOf(user.get(0));
+
+
         if(voice_input.contains("开")&&!voice_input.contains("模式")){
 
             String device=voice_input.substring(voice_input.indexOf("开")+1);

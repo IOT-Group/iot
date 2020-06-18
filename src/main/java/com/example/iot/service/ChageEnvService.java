@@ -3,13 +3,21 @@ package com.example.iot.service;
 import com.example.iot.dao.Repository.EnvironmentRepository;
 import com.example.iot.service.Environment.ChangeEnv;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+@Repository
 public class ChageEnvService implements ChangeEnv {
     @Autowired
     EnvironmentRepository environmentRepository;
 
-    @Override
-    public void analyseIns(int id,int type ,int instruction) {
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
+
+    private void analyseIns(int id,int type ,int instruction) {
         //type 0=温度，1=湿度,2=主人在家与否
         //instruction
         // type0时，int值为温度
@@ -24,6 +32,17 @@ public class ChageEnvService implements ChangeEnv {
         else if(type==2){
             environmentRepository.changeHome(id,instruction);
         }
+
+    }
+
+    @Override
+    public void analyseInpput(String username, String type, String ins) {
+        String sql="SELECT id from user where username='"+username+"'";
+        List<String> user=jdbcTemplate.queryForList(sql,String.class);
+
+        int id=Integer.valueOf(user.get(0));
+        analyseIns(id,Integer.valueOf(type),Integer.valueOf(ins));
+
 
     }
 }

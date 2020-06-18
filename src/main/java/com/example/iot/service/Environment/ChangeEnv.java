@@ -4,5 +4,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ChangeEnv {
-    public void analyseIns(int id,int type,int instruction);
+    public void analyseInpput(String username,String type,String ins);
 }
