@@ -1,8 +1,7 @@
 package com.example.iot.dao;
 
 import com.example.iot.dao.Repository.AnalyzeRepository;
-import com.example.iot.po.Analyze.Humidifier;
-import com.example.iot.po.Analyze.HumidifierMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

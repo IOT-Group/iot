@@ -20,7 +20,7 @@ public class AutoOperateDao implements AutoOperateRepository {
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public void autoOperate(String userId,String time,String temperature,String humidity,String ownerState,String timeInterval){
+    public void autoOperate(String username,String time,String temperature,String humidity,String ownerState,String timeInterval){
         int timeInteger=Integer.parseInt(time);
         int timeIntervalInteger=Integer.parseInt(timeInterval);
 
@@ -41,38 +41,48 @@ public class AutoOperateDao implements AutoOperateRepository {
         }
 
         //根据分析的用户数据，判断在该环境下是否需要自动操控设备。
-        List<Analyze> analyzes=jdbcTemplate.query("select d.type,T.deviceid,T.condition,T.state from device d ,(select * from `analyze` a where a.deviceid in (select id from device where userId=?))T where d.id=T.deviceid;",new AnalyzeMapper(),userId);
+        List<Analyze> analyzes=jdbcTemplate.query("select d.type,T.deviceid,T.condition,T.state from device d ,(select * from `analyze` a where a.deviceid in (select device.id from device,(select id from user where username=?)T1 where userId=T1.id))T where d.id=T.deviceid;",new AnalyzeMapper(),username);
         for(int i=0;i<analyzes.size();i++){
             Analyze analyze=analyzes.get(i);
             String type=analyze.getDeviceType().substring(0,1);
             if(type.equals("A")){   //空调
-                //若空调分析数据的condition是大于等于16度,且环境温度大于等于condition温度，则开冷气
-                //若空调分析数据的condition是小于16度,且环境温度小于等于condition温度，则开暖气
-                if((Integer.parseInt(analyze.getCondition())>=16 && Integer.parseInt(temperature)>=Integer.parseInt(analyze.getCondition()))||(Integer.parseInt(analyze.getCondition())<16 && Integer.parseInt(temperature)<=Integer.parseInt(analyze.getCondition()))){
-                    String code = "A_PowerOn_" + analyze.getCondition() + "_" + analyze.getState();
+                if(ownerState.equals("1")) {
+                    //若空调分析数据的condition是大于等于16度,且环境温度大于等于condition温度，则开冷气
+                    //若空调分析数据的condition是小于16度,且环境温度小于等于condition温度，则开暖气
+                    if ((Integer.parseInt(analyze.getCondition()) >= 16 && Integer.parseInt(temperature) >= Integer.parseInt(analyze.getCondition())) || (Integer.parseInt(analyze.getCondition()) < 16 && Integer.parseInt(temperature) <= Integer.parseInt(analyze.getCondition()))) {
+                        String code = "A_PowerOn_" + analyze.getCondition() + "_" + analyze.getState();
+                        System.out.println("code: "+code);
 
-
+                    }
                 }
             }
             else if(type.equals("H")){  //加湿器
-                if(Integer.parseInt(analyze.getState())==1 && Integer.parseInt(humidity)<=Integer.parseInt(analyze.getCondition())){   //若环境湿度小于等于开加湿器的condition湿度，则开加湿器
-                    String code="H_PowerOn_"+analyze.getCondition();
+                if(ownerState.equals("1")) {
+                    if (Integer.parseInt(analyze.getState()) == 1 && Integer.parseInt(humidity) <= Integer.parseInt(analyze.getCondition())) {   //若环境湿度小于等于开加湿器的condition湿度，则开加湿器
+                        String code = "H_PowerOn_" + analyze.getCondition();
+                        System.out.println("code: "+code);
 
-                }
-                else if(Integer.parseInt(analyze.getState())==0 && Integer.parseInt(humidity)>=Integer.parseInt(analyze.getCondition())) {    //若环境湿度大于等于关加湿器的condition湿度，则关加湿器
-                    String code="H_PowerOff_"+analyze.getCondition();
+                    } else if (Integer.parseInt(analyze.getState()) == 0 && Integer.parseInt(humidity) >= Integer.parseInt(analyze.getCondition())) {    //若环境湿度大于等于关加湿器的condition湿度，则关加湿器
+                        String code = "H_PowerOff_" + analyze.getCondition();
+                        System.out.println("code: "+code);
 
+                    }
                 }
             }
             else if(type.equals("C")){  //窗帘
-
+                if(Integer.parseInt(analyze.getState())==1 && Integer.parseInt(time)>=Integer.parseInt(analyze.getCondition())){       //若是要拉开窗帘，且时间大于等于condition时间，则拉开窗帘
+                    String code="C_PowerOn";
+                    System.out.println("code: "+code);
+                }
+                else if(Integer.parseInt(analyze.getState())==0 && Integer.parseInt(time)>=Integer.parseInt(analyze.getCondition())){   //若是要关窗帘，且时间大于等于condition时间，则关窗帘
+                    String code="C_PowerOff";
+                    System.out.println("code: "+code);
+                }
             }
 
         }
 
-        if(ownerState.equals("1")){ //若主人在家
 
-        }
 
 
 

@@ -1,8 +1,12 @@
 package com.example.iot.service;
 
+import com.example.iot.dao.Repository.UserRepository;
 import com.example.iot.dao.UserDao;
+import com.example.iot.po.User.Device;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * provide service about users
@@ -11,11 +15,18 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserService {
-
     @Autowired
-    UserDao userDao;
+    UserRepository userRepository;
+
+    public boolean register(String username,String password){
+        return userRepository.register(username,password);
+    }
 
     public boolean login(String username,String password){
-        return userDao.login(username,password);
+        return userRepository.login(username,password);
+    }
+
+    public List<Device> getDevices(String username){
+        return userRepository.getUserDevice(username);
     }
 }

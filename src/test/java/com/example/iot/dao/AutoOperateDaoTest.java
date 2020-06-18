@@ -16,6 +16,6 @@ public class AutoOperateDaoTest {
 
     @Test
     public void autoOperateTest(){
-        autoOperateDao.autoOperate("300","","","","30");
+        autoOperateDao.autoOperate("benson","720","36","10","1","30");
     }
 }
