@@ -1,4 +1,4 @@
-create database iot;
+
 use iot;
 drop table if exists device;
 drop table if exists devicetype;
