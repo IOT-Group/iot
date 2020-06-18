@@ -16,6 +16,6 @@ class VoiceServiceTest {
 
     @Test
     void analyzeVoice() {
-        voiceService.analyzeVoice("打开空调");
+        //voiceService.analyzeVoice("打开空调");
     }
 }

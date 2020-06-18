@@ -28,7 +28,7 @@ public class UserDao implements UserRepository {
 
     @Override
     public boolean login(String username,String password){
-        int count=jdbcTemplate.queryForObject("select count(*) from user where usename=? and password=?",Integer.class,username,password);
+        int count=jdbcTemplate.queryForObject("select count(*) from user where username=? and password=?",Integer.class,username,password);
         if(count==0)
             return false;
         else
