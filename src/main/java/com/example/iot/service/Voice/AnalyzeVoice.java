@@ -4,6 +4,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AnalyzeVoice {
-    public void analyzeVoice(String voice_input,int id);
+    public void analyzeVoice(String voice_input,String username);
 
 }

@@ -27,6 +27,7 @@ CREATE TABLE `devicetype` (
 
 CREATE TABLE `environment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userid` int(11) DEFAULT NULL,
   `time` varchar(255) DEFAULT NULL,
   `temperature` varchar(255) DEFAULT NULL,
   `humidity` varchar(255) DEFAULT NULL,
@@ -66,18 +67,3 @@ CREATE TABLE `calendar` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-insert into devicetype (name,type,power,voltage) values ("A1","AirConditioner","1000","220");
-insert into devicetype (name,type,pnsert into devicetype (name,type,power,voltage) values ("A1","AirConditioner","1000","220");
-insert into devicetype (name,type,power,voltage) values ("A2","AirConditioner","1500","220");
-insert into devicetype (name,type,power,voltage) values ("L1","Light","20","220");
-insert into devicetype (name,type,power,voltage) values ("L2","Light","50","220");
-insert into devicetype (name,type,power,voltage) values ("L3","Light","75","220");
-insert into devicetype (name,type,power,voltage) values ("T1","TV","100","220");
-insert into devicetype (name,type,power,voltage) values ("T2","TV","250","220");
-insert into devicetype (name,type,power,voltage) values ("C1","Curtain","50","220");
-insert into devicetype (name,type,power,voltage) values ("C2","Curtain","60","220");
-insert into devicetype (name,type,power,voltage) values ("C3","Curtain","70","220");
-insert into devicetype (name,type,power,voltage) values ("H1","Humidifier","15","220");
-insert into devicetype (name,type,power,voltage) values ("H2","Humidifier","20","220");
-insert into devicetype (name,type,power,voltage) values ("B1","Box","10","220");
-insert into devicetype (name,type,power,voltage) values ("B2","Box","20","220");
