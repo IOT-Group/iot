@@ -38,7 +38,7 @@ public class AnalyzeDao implements AnalyzeRepository {
             String[] splitCodes=codes.get(i).split("_");
             int curTemperature=Integer.parseInt(splitCodes[2]);
             int setTemperature=Integer.parseInt(splitCodes[3]);
-            if (curTemperature >= 20) {     //用户开的是冷气
+            if (curTemperature >= 16) {     //用户开的是冷气 (16度以上是开冷气，以下则开暖气)
                 ColdCurTmpSum=ColdCurTmpSum+curTemperature;
                 ColdSetTmpSum=ColdSetTmpSum+setTemperature;
                 ColdCount++;
@@ -48,14 +48,35 @@ public class AnalyzeDao implements AnalyzeRepository {
                 HotCount++;
             }
         }
-        int coldCurTemperature=ColdCurTmpSum/ColdCount;
-        int coldSetTemperature=ColdSetTmpSum/ColdCount;
-        int hotCurTemperature=HotCurTmpSum/HotCount;
-        int hotSetTemperature=HotSetTmpSum/HotCount;
-        System.out.println("coldCurTemperature is "+coldCurTemperature);
-        System.out.println("coldSetTemperature is "+coldSetTemperature);
-        System.out.println("hotCurTemperature is "+hotCurTemperature);
-        System.out.println("hotSetTemperature is "+hotSetTemperature);
+        if(ColdCount!=0) {
+            int coldCurTemperature = ColdCurTmpSum / ColdCount;
+            int coldSetTemperature = ColdSetTmpSum / ColdCount;
+            int count=jdbcTemplate.queryForObject("select count(*) from `analyze` where `deviceid`=? and `condition`>=16",Integer.class,deviceId);
+            if(count==0){   //插入新数据
+                sql="insert into `analyze` (`deviceid`,`condition`,`state`) values (\""+deviceId+"\",\""+coldCurTemperature+"\",\""+coldSetTemperature+"\");";
+                jdbcTemplate.update(sql);
+            }
+            else{
+                jdbcTemplate.update("update `analyze` set `deviceid`=?,`condition`=?,`state`=? where  `deviceid`=? and `condition`>=16;",deviceId,coldCurTemperature,coldSetTemperature,deviceId);
+            }
+        }
+        if(HotCount!=0) {
+            int hotCurTemperature = HotCurTmpSum / HotCount;
+            int hotSetTemperature = HotSetTmpSum / HotCount;
+            int count=jdbcTemplate.queryForObject("select count(*) from `analyze` where `deviceid`=? and `condition`<16",Integer.class,deviceId);
+            if(count==0){   //插入新数据
+                sql="insert into `analyze` (`deviceid`,`condition`,`state`) values (\""+deviceId+"\",\""+hotCurTemperature+"\",\""+hotSetTemperature+"\");";
+                jdbcTemplate.update(sql);
+            }
+            else{
+                jdbcTemplate.update("update `analyze` set `deviceid`=?,`condition`=?,`state`=? where `deviceid`=? and `condition`<16;",deviceId,hotCurTemperature,hotSetTemperature,deviceId);
+            }
+        }
+//        System.out.println("coldCurTemperature is "+coldCurTemperature);
+//        System.out.println("coldSetTemperature is "+coldSetTemperature);
+//        System.out.println("hotCurTemperature is "+hotCurTemperature);
+//        System.out.println("hotSetTemperature is "+hotSetTemperature);
+
 
     }
 
@@ -80,10 +101,28 @@ public class AnalyzeDao implements AnalyzeRepository {
         result=sum/Humidiness.size();
         System.out.println("result is "+result);
         //不存在数据则插入，存在则更新
-        if(state.equals("PowerOn"))
-            sql=" insert into `analyze` (`deviceid`,`condition`,`state`) value (\""+deviceId+"\",\""+result+"\",\"1\") on duplicate key update `condition`=\""+result+"\";";
-        else
-            sql=" insert into `analyze` (`deviceid`,`condition`,`state`) value (\""+deviceId+"\",\""+result+"\",\"0\") on duplicate key update `condition`=\""+result+"\";";
-        jdbcTemplate.update(sql);
+        if(state.equals("PowerOn")){
+            int count=jdbcTemplate.queryForObject("select count(*) from `analyze` where `deviceid`=? and `state`=?",Integer.class,deviceId,"1");
+            if(count==0){   //插入数据
+                sql="insert into `analyze` (`deviceid`,`condition`,`state`) values (\""+deviceId+"\",\""+result+"\",\"1\");";
+                jdbcTemplate.update(sql);
+            }
+            else{   //更新数据
+                jdbcTemplate.update("update `analyze` set `deviceid`=?,`condition`=?,`state`=? where `deviceid`=? and `state`=?;",deviceId,result,"1",deviceId,"1");
+            }
+            //sql=" insert into `analyze` (`deviceid`,`condition`,`state`) value (\""+deviceId+"\",\""+result+"\",\"1\") on duplicate key update `condition`=\""+result+"\";";
+        }
+        else{
+            int count=jdbcTemplate.queryForObject("select count(*) from `analyze` where `deviceid`=? and `state`=?",Integer.class,deviceId,"0");
+            if(count==0){   //插入数据
+                sql="insert into `analyze` (`deviceid`,`condition`,`state`) values (\""+deviceId+"\",\""+result+"\",\"0\");";
+                jdbcTemplate.update(sql);
+            }
+            else{   //更新数据
+                jdbcTemplate.update("update `analyze` set `deviceid`=?,`condition`=?,`state`=? where `deviceid`=? and `state`=?;",deviceId,result,"0",deviceId,"0");
+            }
+        }
+           // sql=" insert into `analyze` (`deviceid`,`condition`,`state`) value (\""+deviceId+"\",\""+result+"\",\"0\") on duplicate key update `condition`=\""+result+"\";";
+        //jdbcTemplate.update(sql);
     }
 }

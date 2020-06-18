@@ -5,6 +5,8 @@ drop table if exists devicetype;
 drop table if exists environment;
 drop table if exists operation;
 drop table if exists user;
+drop table if exists analyze;
+drop table if exists calendar;
 
 CREATE TABLE `device` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -59,6 +61,7 @@ CREATE TABLE `calendar` (
   `deviceid` varchar(255) DEFAULT NULL,
   `time` varchar(255) DEFAULT NULL,
   `code` varchar(255) DEFAULT NULL,
+  `isFinished` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
