@@ -30,9 +30,9 @@ public class CalendarController {
     }
 
     @CrossOrigin
-    @PostMapping(value = "api/deleteCalendar")
+    @PostMapping(value = "api/showCalendar")
     @ResponseBody
-    public void showCalendar(@RequestBody User requestUser){
-
+    public Response showCalendar(@RequestBody User requestUser){
+        return Response.ResponseSuccess(calendarService.showCalendar(requestUser.getUsername()));
     }
 }
