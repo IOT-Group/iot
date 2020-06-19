@@ -1,6 +1,7 @@
 package com.example.iot.controller;
 
 import com.example.iot.service.CalendarService;
+import com.example.iot.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,12 +15,9 @@ public class CalendarController {
     CalendarService calendarService;
 
     @RequestMapping("/addCalendar")
-    public ModelAndView addCalendar(@RequestParam(value = "deviceId",required = true) String deviceId, @RequestParam(value = "time",required = true) String time, @RequestParam(value = "code",required = true) String code){
+    public Response addCalendar(@RequestParam(value = "deviceId",required = true) String deviceId, @RequestParam(value = "time",required = true) String time, @RequestParam(value = "code",required = true) String code){
         boolean result= calendarService.addCalendar(deviceId,time,code);
-        ModelAndView mav = new ModelAndView();
-        //mav.setViewName("authorDetail");
-        mav.addObject("result",result);
-        return mav;
+        return Response.ResponseSuccess(result);
     }
 
     @RequestMapping("/deleteCalendar")

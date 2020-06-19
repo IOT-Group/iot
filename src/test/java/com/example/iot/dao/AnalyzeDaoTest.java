@@ -14,6 +14,16 @@ public class AnalyzeDaoTest {
     AnalyzeDao analyzeDao;
 
     @Test
+    public void analyzeTest(){
+        analyzeDao.analyze("1","0");
+        analyzeDao.analyze("1","1");
+        analyzeDao.analyze("5","1");
+        analyzeDao.analyze("5","0");
+        analyzeDao.analyze("6","1");
+        analyzeDao.analyze("6","0");
+    }
+
+    @Test
     public void analyzeHumidifierTest() {
         analyzeDao.analyzeHumidifier("1","H_PowerOff_55");
         analyzeDao.analyzeHumidifier("1","H_PowerOn_25");
