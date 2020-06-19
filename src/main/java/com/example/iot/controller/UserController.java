@@ -43,13 +43,15 @@ public class UserController {
         }
     }
 
+    @RequestMapping("api/register")
+    public Response register(@RequestParam(value = "username",required = true)String username,@RequestParam(value="password",required = true)String password){
+        return Response.ResponseSuccess(userService.register(username,password));
+    }
+
 
     @RequestMapping("/getDevices")
-    public ModelAndView getUserDevice(@RequestParam(value = "username",required = true)String username){
+    public Response getUserDevice(@RequestParam(value = "username",required = true)String username){
         List<Device> devices=userService.getDevices(username);
-        ModelAndView mav = new ModelAndView();
-        //mav.setViewName("authorDetail");
-        mav.addObject("result",devices);
-        return mav;
+        return Response.ResponseSuccess(devices);
     }
 }

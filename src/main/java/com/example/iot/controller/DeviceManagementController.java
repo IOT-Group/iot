@@ -1,6 +1,7 @@
 package com.example.iot.controller;
 
 import com.example.iot.service.DeviceManagementService;
+import com.example.iot.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,17 +19,13 @@ public class DeviceManagementController {
         return deviceManagementService.addDevice(type, owner);
     }
     @RequestMapping("/deleteDevice")
-    public ModelAndView deleteDevice(@RequestParam(value ="deviceId",required = true)String deviceId){
+    public Response deleteDevice(@RequestParam(value ="deviceId",required = true)String deviceId){
         boolean result=deviceManagementService.deleteDevice(deviceId);
-        ModelAndView mav=new ModelAndView();
-        mav.addObject("result",result);
-        return mav;
+        return Response.ResponseSuccess(result);
     }
     @RequestMapping("/operateDevice")
-    public ModelAndView operateDevice(@RequestParam(value = "time",required = true)String time,@RequestParam(value = "code",required = true)String code,@RequestParam(value = "deviceId",required = true)String deviceId){
+    public Response operateDevice(@RequestParam(value = "time",required = true)String time,@RequestParam(value = "code",required = true)String code,@RequestParam(value = "deviceId",required = true)String deviceId){
         boolean result=deviceManagementService.operateDevice(time, code, deviceId);
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("result",result);
-        return mav;
+        return Response.ResponseSuccess(result);
     }
 }
