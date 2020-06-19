@@ -1,6 +1,8 @@
 package com.example.iot.service;
 
+import com.example.iot.po.User.Device;
 import com.example.iot.service.Recognition.FaceRecognition;
+import com.example.iot.vo.DeviceVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,7 +22,7 @@ public class FaceRecService implements FaceRecognition {
 
 
     @Override
-    public void recognition_string(String input,String username,String timeInterval) {
+    public List<DeviceVO> recognition_string(String input, String username, String timeInterval) {
         //出家门情况
         if(input=="0"){
             //调用关闭空调，电视机，电灯，音箱，加湿器
@@ -48,6 +50,7 @@ public class FaceRecService implements FaceRecognition {
 
             autoOperateService.autoOperate(username,String.valueOf(time.get(0)),String.valueOf(temp.get(0)),String.valueOf(hum.get(0)),"1",timeInterval);
         }
+        return null;
     }
 
 

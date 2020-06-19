@@ -12,25 +12,25 @@ public class EnvironmentDao implements EnvironmentRepository {
 
     @Override
     public void changeDegree(int id,int degree) {
-        String sql="update environment set temperature = '"+degree+"' where id='"+id+"'";
+        String sql="update environment set temperature = '"+degree+"' where userid='"+id+"'";
         jdbcTemplate.update(sql);
     }
 
     @Override
     public void changeHumidity(int id,int humidity) {
-        String sql="update environment set humidity = '"+humidity+"' where id='"+id+"'";
+        String sql="update environment set humidity = '"+humidity+"' where userid='"+id+"'";
         jdbcTemplate.update(sql);
     }
 
     @Override
     public void changeHome(int id,int home) {
-        String sql="update environment set ownerState = '"+home+"' where id='"+id+"'";
+        String sql="update environment set ownerState = '"+home+"' where userid='"+id+"'";
         jdbcTemplate.update(sql);
     }
 
     @Override
     public void changeTime(int id, String time) {
-        String sql="update environment set time = '"+time+"' where id='"+id+"'";
+        String sql="update environment set time = '"+time+"' where userid='"+id+"'";
         jdbcTemplate.update(sql);
     }
 }

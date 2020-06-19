@@ -4,9 +4,9 @@ drop table if exists device;
 drop table if exists devicetype;
 drop table if exists environment;
 drop table if exists operation;
-drop table if exists user;
-drop table if exists analyze;
-drop table if exists calendar;
+drop table if exists `user`;
+drop table if exists `analyze`;
+drop table if exists `calendar`;
 
 CREATE TABLE `device` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
