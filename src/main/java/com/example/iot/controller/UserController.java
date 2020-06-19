@@ -43,15 +43,19 @@ public class UserController {
         }
     }
 
-    @RequestMapping("api/register")
-    public Response register(@RequestParam(value = "username",required = true)String username,@RequestParam(value="password",required = true)String password){
-        return Response.ResponseSuccess(userService.register(username,password));
+    @CrossOrigin
+    @PostMapping(value = "api/register")
+    @ResponseBody
+    public Response register(@RequestBody User requestUser){
+        return Response.ResponseSuccess(userService.register(requestUser.getUsername(),requestUser.getPassword()));
     }
 
 
-    @RequestMapping("/getDevices")
-    public Response getUserDevice(@RequestParam(value = "username",required = true)String username){
-        List<Device> devices=userService.getDevices(username);
+    @CrossOrigin
+    @PostMapping(value = "api/getDevices")
+    @ResponseBody
+    public Response getUserDevice(@RequestBody User requestUser){
+        List<Device> devices=userService.getDevices(requestUser.getUsername());
         return Response.ResponseSuccess(devices);
     }
 }
