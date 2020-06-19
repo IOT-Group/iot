@@ -16,6 +16,7 @@ public class AutoOperateService {
             autoOperateRepository.autoOperate(username, time, temperature, humidity, ownerState, timeInterval);
             return Response.ResponseSuccess(autoOperateRepository.getHomeCondition(username));
         }catch (Exception e){
+            e.printStackTrace();
             return Response.ResponseFail("自动操作失败！");
         }
 

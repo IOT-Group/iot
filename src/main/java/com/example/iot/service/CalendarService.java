@@ -16,8 +16,9 @@ public class CalendarService {
         return calendarRepository.addCalendar(deviceId,time,code);
     }
 
-    public void deleteCalendar(String deviceId,String time,String code){
+    public boolean deleteCalendar(String deviceId,String time,String code){
         calendarRepository.deleteCalendar(deviceId,time,code);
+        return true;
     }
 
     public List<Calendar> showCalendar(String username){
