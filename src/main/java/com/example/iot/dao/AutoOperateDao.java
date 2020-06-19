@@ -1,6 +1,7 @@
 package com.example.iot.dao;
 
 import com.example.iot.dao.Repository.AutoOperateRepository;
+import com.example.iot.dao.Repository.DeviceManagementRepository;
 import com.example.iot.po.AutoOperate.Analyze;
 import com.example.iot.po.AutoOperate.AnalyzeMapper;
 import com.example.iot.po.AutoOperate.Calendar;
@@ -19,6 +20,9 @@ public class AutoOperateDao implements AutoOperateRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private DeviceManagementRepository deviceManagementRepository;
+
     @Override
     public void autoOperate(String username,String time,String temperature,String humidity,String ownerState,String timeInterval){
         int timeInteger=Integer.parseInt(time);
@@ -36,7 +40,7 @@ public class AutoOperateDao implements AutoOperateRepository {
         if(calendars.size()!=0){     //若该时间段内有日程表，则调用操控设备的接口
             for(int i=0;i<calendars.size();i++){
                 Calendar calendar=calendars.get(i);
-
+                deviceManagementRepository.operateDevice(calendar.getTime(),calendar.getCode(),calendar.getDeviceId());
             }
         }
 
@@ -50,33 +54,35 @@ public class AutoOperateDao implements AutoOperateRepository {
                     //若空调分析数据的condition是大于等于16度,且环境温度大于等于condition温度，则开冷气
                     //若空调分析数据的condition是小于16度,且环境温度小于等于condition温度，则开暖气
                     if ((Integer.parseInt(analyze.getCondition()) >= 16 && Integer.parseInt(temperature) >= Integer.parseInt(analyze.getCondition())) || (Integer.parseInt(analyze.getCondition()) < 16 && Integer.parseInt(temperature) <= Integer.parseInt(analyze.getCondition()))) {
-                        String code = "A_PowerOn_" + analyze.getCondition() + "_" + analyze.getState();
+                        String code =  analyze.getState();
                         System.out.println("code: "+code);
-
+                        deviceManagementRepository.operateDevice(time,code,analyze.getDeviceId());
                     }
                 }
             }
             else if(type.equals("H")){  //加湿器
                 if(ownerState.equals("1")) {
                     if (Integer.parseInt(analyze.getState()) == 1 && Integer.parseInt(humidity) <= Integer.parseInt(analyze.getCondition())) {   //若环境湿度小于等于开加湿器的condition湿度，则开加湿器
-                        String code = "H_PowerOn_" + analyze.getCondition();
-                        System.out.println("code: "+code);
+                        //String code = "H_PowerOn_" + analyze.getCondition();
+                        deviceManagementRepository.operateDevice(time,"1",analyze.getDeviceId());
 
                     } else if (Integer.parseInt(analyze.getState()) == 0 && Integer.parseInt(humidity) >= Integer.parseInt(analyze.getCondition())) {    //若环境湿度大于等于关加湿器的condition湿度，则关加湿器
-                        String code = "H_PowerOff_" + analyze.getCondition();
-                        System.out.println("code: "+code);
-
+                        //String code = "H_PowerOff_" + analyze.getCondition();
+                        //System.out.println("code: "+code);
+                        deviceManagementRepository.operateDevice(time,"0",analyze.getDeviceId());
                     }
                 }
             }
             else if(type.equals("C")){  //窗帘
                 if(Integer.parseInt(analyze.getState())==1 && Integer.parseInt(time)>=Integer.parseInt(analyze.getCondition())){       //若是要拉开窗帘，且时间大于等于condition时间，则拉开窗帘
-                    String code="C_PowerOn";
-                    System.out.println("code: "+code);
+                    //String code="C_PowerOn";
+                    //System.out.println("code: "+code);
+                    deviceManagementRepository.operateDevice(time,"1",analyze.getDeviceId());
                 }
                 else if(Integer.parseInt(analyze.getState())==0 && Integer.parseInt(time)>=Integer.parseInt(analyze.getCondition())){   //若是要关窗帘，且时间大于等于condition时间，则关窗帘
-                    String code="C_PowerOff";
-                    System.out.println("code: "+code);
+                    //String code="C_PowerOff";
+                   // System.out.println("code: "+code);
+                    deviceManagementRepository.operateDevice(time,"0",analyze.getDeviceId());
                 }
             }
 

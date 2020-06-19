@@ -2,6 +2,7 @@ package com.example.iot.controller;
 
 import com.example.iot.po.User.Device;
 import com.example.iot.service.UserService;
+import com.example.iot.vo.LoginResponse;
 import com.example.iot.vo.Response;
 import com.example.iot.vo.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class UserController {
     @CrossOrigin
     @PostMapping(value = "api/login")
     @ResponseBody
-    public Response login(@RequestBody User requestUser, HttpSession session) {
+    public LoginResponse login(@RequestBody User requestUser, HttpSession session) {
         // escape html for xss
         String username = requestUser.getUsername();
         String password = requestUser.getPassword();
@@ -35,10 +36,10 @@ public class UserController {
         password = HtmlUtils.htmlEscape(password);
 
         if (!userService.login(username,password)) {
-            return new Response(400);
+            return new LoginResponse(400);
         } else {
             session.setAttribute("user",requestUser);
-            return new Response(200);
+            return new LoginResponse(200);
         }
     }
 
