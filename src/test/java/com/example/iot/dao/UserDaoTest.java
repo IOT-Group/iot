@@ -16,6 +16,7 @@ public class UserDaoTest {
 
     @Test
     public void registerTest(){
-//        userRepository.register("root","root");
+        boolean result=userRepository.register("leo","123");
+        System.out.println(result);
     }
 }
