@@ -1,5 +1,6 @@
 package com.example.iot.dao;
 
+import com.example.iot.po.User.HomeCondition;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
