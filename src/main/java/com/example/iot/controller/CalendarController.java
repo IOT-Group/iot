@@ -25,8 +25,9 @@ public class CalendarController {
     @CrossOrigin
     @PostMapping(value = "api/deleteCalendar")
     @ResponseBody
-    public void deleteCalendar(@RequestBody Operation operation) {
-        calendarService.deleteCalendar(operation.getDeviceId(),operation.getTime(),operation.getCode());
+    public Response deleteCalendar(@RequestBody Operation operation) {
+        return Response.ResponseSuccess(
+                calendarService.deleteCalendar(operation.getDeviceId(),operation.getTime(),operation.getCode()));
     }
 
     @CrossOrigin
