@@ -2,10 +2,15 @@ package com.example.iot.dao;
 
 import com.example.iot.dao.Repository.AutoOperateRepository;
 import com.example.iot.dao.Repository.DeviceManagementRepository;
+import com.example.iot.dao.Repository.UserRepository;
 import com.example.iot.po.AutoOperate.Analyze;
 import com.example.iot.po.AutoOperate.AnalyzeMapper;
 import com.example.iot.po.AutoOperate.Calendar;
 import com.example.iot.po.AutoOperate.CalendarMapper;
+import com.example.iot.po.User.Device;
+import com.example.iot.po.User.Environment;
+import com.example.iot.po.User.EnvironmentMapper;
+import com.example.iot.po.User.HomeCondition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,6 +27,9 @@ public class AutoOperateDao implements AutoOperateRepository {
 
     @Autowired
     private DeviceManagementRepository deviceManagementRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public void autoOperate(String username,String time,String temperature,String humidity,String ownerState,String timeInterval){
@@ -87,10 +95,12 @@ public class AutoOperateDao implements AutoOperateRepository {
             }
 
         }
+    }
 
-
-
-
-
+    @Override
+    public HomeCondition getHomeCondition(String username){
+        Environment environment=jdbcTemplate.queryForObject(" select time,temperature,humidity,ownerState from environment,(select id from user where username=?)T where environment.userid=T.id;",new EnvironmentMapper(),username);
+        List<Device> devices=userRepository.getUserDevice(username);
+        return  new HomeCondition(environment,devices);
     }
 }

@@ -34,15 +34,11 @@ public class UserDao implements UserRepository {
             return true;
     }
 
-
+    @Override
     public List<Device> getUserDevice(String username){
         List<Device> devices=jdbcTemplate.query("select T2.*,d2.power,d2.voltage from devicetype d2,(select d1.id as deviceId,type,state from device d1,(select id from user where username=?)T1 where d1.userId=T1.id)T2 where T2.type=d2.name;",new DeviceMapper(),username);
         return devices;
     }
 
-    public HomeCondition getHomeCondition(String username){
-        Environment environment=jdbcTemplate.queryForObject(" select time,temperature,humidity,ownerState from environment,(select id from user where username=?)T where environment.userid=T.id;",new EnvironmentMapper(),username);
-        List<Device> devices=getUserDevice(username);
-        return  new HomeCondition(environment,devices);
-    }
+
 }

@@ -43,6 +43,7 @@ public class UserController {
         }
     }
 
+    @RequestMapping("api/register")
     public Response register(@RequestParam(value = "username",required = true)String username,@RequestParam(value="password",required = true)String password){
         return Response.ResponseSuccess(userService.register(username,password));
     }
