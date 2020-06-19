@@ -20,18 +20,18 @@ public class DeviceManagementDao implements DeviceManagementRepository {
 
     @Override
     public int addDevice(String type, String owner) {
-        int id=jdbcTemplate.update("insert into device (`type`,`owner`) values (?,?)",type,owner);
+        int id=jdbcTemplate.update("insert into device (`type`,`userId`) values (?,?)",type,owner);
         return id;
     }
 
     @Override
-    public int deleteDevice(String deviceId) {
+    public boolean deleteDevice(String deviceId) {
         jdbcTemplate.update("delete from device deviceid=\""+ deviceId + "\"");
-        return 1;
+        return true;
     }
 
     @Override
-    public int operateDevice(String time, String code, String deviceId) {
+    public boolean operateDevice(String time, String code, String deviceId) {
         int now=Integer.parseInt(time);
         int gap=now-latesttime;         //上次操作距这次操作的时间，用于决定设备运行的效果
         int flag=0;       //默认运行设备列表中无当前操作设备
@@ -46,7 +46,7 @@ public class DeviceManagementDao implements DeviceManagementRepository {
         }
         if(flag==0){
             device d1=new device();
-            String type=jdbcTemplate.queryForObject("select owner from device where id= ?",String.class,deviceId);
+            String type=jdbcTemplate.queryForObject("select type from device where id= ?",String.class,deviceId);
             switch (type){
                 case "AirConditioner":d1=new AirConditioner(code,deviceId);break;
                 case "Light":d1=new Light(code,deviceId);break;
@@ -57,6 +57,10 @@ public class DeviceManagementDao implements DeviceManagementRepository {
             }
             runningdevices.add(d1);
         }
-        return 1;
+        String userid=jdbcTemplate.queryForObject("select userId from device where id=?",String.class,deviceId);
+        String temperature=jdbcTemplate.queryForObject("select temperature from environment where userid=?",String.class,userid);
+        String humidity=jdbcTemplate.queryForObject("select humidity from environment where userid=?",String.class,userid);
+        jdbcTemplate.update("insert into operation (deviceid,`time`,code,temperature,humidity)value (?,?,?,?,?)",deviceId,time,code,temperature,humidity);
+        return true;
     }
 }
