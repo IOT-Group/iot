@@ -15,8 +15,7 @@ public class DeviceManagementController {
 
     @RequestMapping("/addDevice")
     public int addDevice(@RequestParam(value = "type",required = true) String type, @RequestParam(value = "owner",required = true) String owner){
-        int id=deviceManagementService.addDevice(type, owner);
-        return id;
+        return deviceManagementService.addDevice(type, owner);
     }
     @RequestMapping("/deleteDevice")
     public ModelAndView deleteDevice(@RequestParam(value ="deviceId",required = true)String deviceId){
@@ -25,7 +24,7 @@ public class DeviceManagementController {
         mav.addObject("result",result);
         return mav;
     }
-    @RequestMapping("operateDevice")
+    @RequestMapping("/operateDevice")
     public ModelAndView operateDevice(@RequestParam(value = "time",required = true)String time,@RequestParam(value = "code",required = true)String code,@RequestParam(value = "deviceId",required = true)String deviceId){
         boolean result=deviceManagementService.operateDevice(time, code, deviceId);
         ModelAndView mav = new ModelAndView();
