@@ -18,6 +18,6 @@ class FaceRecServiceTest {
 
     @Test
     void recognition_string() {
-        //faceRecService.recognition_string("1",1);
+        faceRecService.recognition_string("0","dd","2","120");
     }
 }

@@ -29,7 +29,7 @@ public class EnvironmentDao implements EnvironmentRepository {
     }
 
     @Override
-    public void changeTime(int id, String time) {
+    public void changeTime(int id, int time) {
         String sql="update environment set time = '"+time+"' where userid='"+id+"'";
         jdbcTemplate.update(sql);
     }

@@ -1,5 +1,6 @@
 package com.example.iot.dao;
 
+import com.example.iot.dao.Repository.EnvironmentRepository;
 import com.example.iot.dao.Repository.UserRepository;
 import com.example.iot.po.User.*;
 import org.apache.ibatis.annotations.Mapper;
@@ -15,6 +16,9 @@ public class UserDao implements UserRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    EnvironmentRepository environmentRepository;
+
     @Override
     public boolean register(String username,String password){
         int count=jdbcTemplate.queryForObject("select count(*) from user where username=?",Integer.class,username);
@@ -22,6 +26,11 @@ public class UserDao implements UserRepository {
             return false;
         String sql="insert into `iot`.`user` (username,password) values (\""+username+"\",\""+password+"\")";
         jdbcTemplate.update(sql);
+        int userId=jdbcTemplate.queryForObject("select id from user where username=?",Integer.class,username);
+        environmentRepository.changeDegree(userId,25);
+        environmentRepository.changeHumidity(userId,30);
+        environmentRepository.changeTime(userId,0);
+        environmentRepository.changeHome(userId,1);
         return true;
     }
 

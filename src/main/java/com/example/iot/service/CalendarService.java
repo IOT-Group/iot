@@ -1,8 +1,11 @@
 package com.example.iot.service;
 
 import com.example.iot.dao.Repository.CalendarRepository;
+import com.example.iot.po.AutoOperate.Calendar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CalendarService {
@@ -13,7 +16,12 @@ public class CalendarService {
         return calendarRepository.addCalendar(deviceId,time,code);
     }
 
-    public void deleteCalendar(String deviceId,String time,String code){
+    public boolean deleteCalendar(String deviceId,String time,String code){
         calendarRepository.deleteCalendar(deviceId,time,code);
+        return true;
+    }
+
+    public List<Calendar> showCalendar(String username){
+        return calendarRepository.showCalendar(username);
     }
 }

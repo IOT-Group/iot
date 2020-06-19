@@ -65,7 +65,6 @@ CREATE TABLE `calendar` (
   `deviceid` varchar(255) DEFAULT NULL,
   `time` int(255) DEFAULT NULL,
   `code` varchar(255) DEFAULT NULL,
-  `isFinished` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

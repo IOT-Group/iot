@@ -27,8 +27,28 @@ public class VoiceService implements AnalyzeVoice {
 
         if(voice_input.contains("开")&&!voice_input.contains("模式")){
 
-            String device=voice_input.substring(voice_input.indexOf("开")+1);
-            return onDevice(device,id,time);
+            String device;
+            if(voice_input.contains("到")){
+                device=voice_input.substring(voice_input.indexOf("开") + 1,voice_input.indexOf("到"));
+                String code=voice_input.substring(voice_input.indexOf("到")+1);
+                deviceManagementService.operateDevice(time,code,device);
+
+                DeviceVO deviceVO=new DeviceVO();
+                deviceVO.setId(device);
+                deviceVO.setState(code);
+                return deviceVO;
+            }
+            else {
+                device= voice_input.substring(voice_input.indexOf("开") + 1);
+                String code="1";
+                deviceManagementService.operateDevice(time,code,device);
+
+                DeviceVO deviceVO=new DeviceVO();
+                deviceVO.setId(device);
+                deviceVO.setState(code);
+                return deviceVO;
+            }
+
         }
         else if(voice_input.contains("关")&&!voice_input.contains("模式")){
             String device=voice_input.substring(voice_input.indexOf("关")+1);
@@ -55,20 +75,7 @@ public class VoiceService implements AnalyzeVoice {
 
     }
 
-    private DeviceVO onDevice(String device, int id, String time){
 
-
-        //调用打开设备接口
-
-        String code="1";
-        deviceManagementService.operateDevice(time,code,device);
-
-        DeviceVO deviceVO=new DeviceVO();
-        deviceVO.setId(device);
-        deviceVO.setState(code);
-        return deviceVO;
-
-    }
 
     private DeviceVO offDevice(String device,int id,String time){
         //调用关闭设备接口

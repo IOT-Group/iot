@@ -17,7 +17,7 @@ public class RecognitionController {
 
     @RequestMapping("/rec")
     public Response rec(@RequestParam(value = "state",required = true) String state, @RequestParam(value = "username",required = true) String username,@RequestParam(value = "time",required = true) String time, @RequestParam(value = "timeInterval",required = true) String timeInterval){
-        return Response.ResponseSuccess(faceRecognition.recognition_string(state,username,timeInterval));
+        return Response.ResponseSuccess(faceRecognition.recognition_string(state,username,timeInterval,time));
     }
 
 

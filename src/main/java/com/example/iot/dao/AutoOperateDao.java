@@ -37,10 +37,11 @@ public class AutoOperateDao implements AutoOperateRepository {
         int timeIntervalInteger=Integer.parseInt(timeInterval);
 
         //判断该时间段内是否有日程表，有则进行操控设备
+        //String sql="select * from (select c.deviceid,c.time,c.code from calendar c where c.deviceid in (select d.id from device d,(select id from user where username=\"benson\")T1 where d.userid=T1.id))T2 where T2.time+0<=205 and time+0>=200;";
         String sql="select code from calendar where time+0<="+timeInteger+" and time+0>="+(timeInteger-timeIntervalInteger)+";";
         List<Calendar> calendars=new ArrayList<>();
         try {
-            calendars= jdbcTemplate.query(sql,new CalendarMapper());
+            calendars= jdbcTemplate.query("select * from (select c.deviceid,c.time,c.code from calendar c where c.deviceid in (select d.id from device d,(select id from user where username=?)T1 where d.userid=T1.id))T2 where T2.time+0<=? and time+0>=?;",new CalendarMapper(),username,timeInteger,timeInteger-timeIntervalInteger);
         }catch (EmptyResultDataAccessException e) {
             System.out.println("no device calendar atTime:"+time);
         }

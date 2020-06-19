@@ -1,21 +1,20 @@
-package com.example.iot.po.User;
+package com.example.iot.vo;
 
 public class Environment {
+    private String username;
     private String time;
     private String temperature;
     private String humidity;
     private String ownerState;
-    public Environment(){
+    private String timeInterval;
 
+    public String getUsername() {
+        return username;
     }
 
-    public Environment(String time, String temperature, String humidity, String ownerState) {
-        this.time = time;
-        this.temperature = temperature;
-        this.humidity = humidity;
-        this.ownerState = ownerState;
+    public void setUsername(String username) {
+        this.username = username;
     }
-
 
     public String getTime() {
         return time;
@@ -47,5 +46,13 @@ public class Environment {
 
     public void setOwnerState(String ownerState) {
         this.ownerState = ownerState;
+    }
+
+    public String getTimeInterval() {
+        return timeInterval;
+    }
+
+    public void setTimeInterval(String timeInterval) {
+        this.timeInterval = timeInterval;
     }
 }
