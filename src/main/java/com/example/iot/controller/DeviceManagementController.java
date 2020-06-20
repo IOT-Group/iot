@@ -16,6 +16,15 @@ public class DeviceManagementController {
     DeviceManagementService deviceManagementService;
 
     @CrossOrigin
+    @PostMapping(value = "api/initialize")
+    @ResponseBody
+    public Response initialize(){
+        boolean result= deviceManagementService.initialize();
+        return Response.ResponseSuccess(result);
+    }
+
+
+    @CrossOrigin
     @PostMapping(value = "api/addDevice")
     @ResponseBody
     public AddDeviceResponse addDevice(@RequestBody DeviceVO deviceVO){

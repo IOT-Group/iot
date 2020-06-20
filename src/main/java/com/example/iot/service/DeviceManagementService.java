@@ -15,6 +15,10 @@ public class DeviceManagementService {
     @Autowired
     AnalyzeRepository analyzeRepository;
 
+    public boolean initialize(){
+        return deviceManagementRepository.initialize();
+    }
+
     public AddDeviceResponse addDevice(String type, String owner){
         return deviceManagementRepository.addDevice(type,owner);
     }
