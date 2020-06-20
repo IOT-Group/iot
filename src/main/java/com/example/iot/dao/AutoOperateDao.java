@@ -2,6 +2,7 @@ package com.example.iot.dao;
 
 import com.example.iot.dao.Repository.AutoOperateRepository;
 import com.example.iot.dao.Repository.DeviceManagementRepository;
+import com.example.iot.dao.Repository.EnvironmentRepository;
 import com.example.iot.dao.Repository.UserRepository;
 import com.example.iot.po.AutoOperate.Analyze;
 import com.example.iot.po.AutoOperate.AnalyzeMapper;
@@ -31,10 +32,20 @@ public class AutoOperateDao implements AutoOperateRepository {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    EnvironmentRepository environmentRepository;
+
     @Override
     public void autoOperate(String username,String time,String temperature,String humidity,String ownerState,String timeInterval){
         int timeInteger=Integer.parseInt(time);
         int timeIntervalInteger=Integer.parseInt(timeInterval);
+
+        //更新数据库环境
+        int userId=jdbcTemplate.queryForObject("select id from user where username=?",Integer.class,username);
+        environmentRepository.changeDegree(userId,Integer.parseInt(temperature));
+        environmentRepository.changeHumidity(userId,Integer.parseInt(humidity));
+        environmentRepository.changeHome(userId,Integer.parseInt(ownerState));
+        environmentRepository.changeTime(userId,timeInteger);
 
         //判断该时间段内是否有日程表，有则进行操控设备
         //String sql="select * from (select c.deviceid,c.time,c.code from calendar c where c.deviceid in (select d.id from device d,(select id from user where username=\"benson\")T1 where d.userid=T1.id))T2 where T2.time+0<=205 and time+0>=200;";
