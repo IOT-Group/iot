@@ -31,7 +31,8 @@ public class DeviceManagementDao implements DeviceManagementRepository {
 
     @Override
     public boolean deleteDevice(String deviceId) {
-        jdbcTemplate.update("delete from device deviceid=\""+ deviceId + "\"");
+        int id=Integer.parseInt(deviceId);
+        jdbcTemplate.update("delete from device where id=\""+ id + "\"");
         return true;
     }
 
@@ -39,6 +40,7 @@ public class DeviceManagementDao implements DeviceManagementRepository {
     public boolean operateDevice(String time, String code, String deviceId) {
         int now=Integer.parseInt(time);
         int gap=now-latesttime;         //上次操作距这次操作的时间，用于决定设备运行的效果
+        latesttime=now;
         int flag=0;       //默认运行设备列表中无当前操作设备
         for (com.example.iot.po.devices.device device : runningdevices) {
             device.update(gap);
@@ -46,12 +48,13 @@ public class DeviceManagementDao implements DeviceManagementRepository {
         for(com.example.iot.po.devices.device device : runningdevices){
             if(device.getId()==Integer.parseInt(deviceId)){
                 device.setState(Integer.parseInt(code));
-                flag=1;
+                flag=1;  //运行设备列表中找到当前操作设备
             }
         }
         if(flag==0){
             device d1=new device();
-            String type=jdbcTemplate.queryForObject("select type from device where id= ?",String.class,deviceId);
+            int id=Integer.parseInt(deviceId);
+            String type=jdbcTemplate.queryForObject("select type from device where id= ?",String.class,id);
             assert type != null;
             if(type.startsWith("A")){
                     d1=new AirConditioner(code,deviceId);
@@ -72,7 +75,7 @@ public class DeviceManagementDao implements DeviceManagementRepository {
                 else if(type.startsWith("B")) {
                     d1 = new Box(code, deviceId);
             }
-            runningdevices.add(d1);
+            runningdevices.add(d1);   //新增运行状态设备
         }
         int userid=Integer.parseInt(jdbcTemplate.queryForObject("select userId from device where id=?",String.class,deviceId));
         String temperature=jdbcTemplate.queryForObject("select temperature from environment where userid=?",String.class,userid);
