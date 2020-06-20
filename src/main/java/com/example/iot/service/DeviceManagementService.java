@@ -2,6 +2,7 @@ package com.example.iot.service;
 
 import com.example.iot.dao.DeviceManagementDao;
 import com.example.iot.dao.Repository.DeviceManagementRepository;
+import com.example.iot.vo.AddDeviceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,7 @@ public class DeviceManagementService {
     @Autowired
     DeviceManagementRepository deviceManagementRepository;
 
-    public int addDevice(String type,String owner){
+    public AddDeviceResponse addDevice(String type, String owner){
         return deviceManagementRepository.addDevice(type,owner);
     }
     public boolean deleteDevice(String deviceId){

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 public class AirConditioner extends device{
-    String type="AirConditioner";
+    String name="AirConditioner";
     public AirConditioner(String code,String deviceId){
         id=Integer.parseInt(deviceId);
         state=Integer.parseInt(code);
