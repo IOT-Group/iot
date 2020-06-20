@@ -77,6 +77,7 @@ public class DeviceManagementDao implements DeviceManagementRepository {
 
     @Override
     public boolean operateDevice(String time, String code, String deviceId) {
+        String oldState="";
         int now=Integer.parseInt(time);
         int gap=now-latesttime;         //上次操作距这次操作的时间，用于决定设备运行的效果
         latesttime=now;
@@ -94,7 +95,7 @@ public class DeviceManagementDao implements DeviceManagementRepository {
                 if(device.getId()==Integer.parseInt(deviceId)){
                     device.setState(Integer.parseInt(code));
                     int id=Integer.parseInt(deviceId);
-                    System.out.println(code+"  "+id);
+                    oldState=jdbcTemplate.queryForObject("select state from device where id= ?",String.class,id);
                     jdbcTemplate.update("update device set state =? where id= ?",code,id);
                     flag=1;  //运行设备列表中找到当前操作设备
                 }
@@ -124,12 +125,15 @@ public class DeviceManagementDao implements DeviceManagementRepository {
                     d1 = new Box(code, deviceId);
             }
             runningdevices.add(d1);   //新增运行状态设备
+            oldState=jdbcTemplate.queryForObject("select state from device where id= ?",String.class,id);
             jdbcTemplate.update("update device set state =? where id= ?",code,id);
         }
         int userid=Integer.parseInt(jdbcTemplate.queryForObject("select userId from device where id=?",String.class,deviceId));
         String temperature=jdbcTemplate.queryForObject("select temperature from environment where userid=?",String.class,userid);
         String humidity=jdbcTemplate.queryForObject("select humidity from environment where userid=?",String.class,userid);
-        jdbcTemplate.update("insert into operation (deviceid,`time`,code,temperature,humidity)value (?,?,?,?,?)",deviceId,time,code,temperature,humidity);
+        if(oldState!=code) {
+            jdbcTemplate.update("insert into operation (deviceid,`time`,code,temperature,humidity)value (?,?,?,?,?)", deviceId, time, code, temperature, humidity);
+        }
         return true;
     }
 }
