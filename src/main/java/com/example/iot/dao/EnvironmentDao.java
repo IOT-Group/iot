@@ -33,4 +33,9 @@ public class EnvironmentDao implements EnvironmentRepository {
         String sql="update environment set time = '"+time+"' where userid='"+id+"'";
         jdbcTemplate.update(sql);
     }
+
+    @Override
+    public void addEnvironment(int userid,int degree,int humidity,int ownerState,int time){
+        jdbcTemplate.update("insert into environment (userid,time,temperature,humidity,ownerState) values (?,?,?,?,?)",userid,time,degree,humidity,ownerState);
+    }
 }

@@ -27,10 +27,7 @@ public class UserDao implements UserRepository {
         String sql="insert into `iot`.`user` (username,password) values (\""+username+"\",\""+password+"\")";
         jdbcTemplate.update(sql);
         int userId=jdbcTemplate.queryForObject("select id from user where username=?",Integer.class,username);
-        environmentRepository.changeDegree(userId,25);
-        environmentRepository.changeHumidity(userId,30);
-        environmentRepository.changeTime(userId,0);
-        environmentRepository.changeHome(userId,1);
+        environmentRepository.addEnvironment(userId,25,30,1,0);
         return true;
     }
 
