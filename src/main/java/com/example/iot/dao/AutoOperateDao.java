@@ -40,6 +40,8 @@ public class AutoOperateDao implements AutoOperateRepository {
         int timeInteger=Integer.parseInt(time);
         int timeIntervalInteger=Integer.parseInt(timeInterval);
 
+        System.out.println("autoOperateDao time is "+time);
+
         //更新数据库环境
         int userId=jdbcTemplate.queryForObject("select id from user where username=?",Integer.class,username);
         environmentRepository.changeDegree(userId,Integer.parseInt(temperature));

@@ -22,6 +22,7 @@ public class AutoOperateController {
 
             HomeCondition homeCondition=autoOperateService.autoOperate(environment.getUsername(), environment.getTime(), environment.getTemperature(), environment.getHumidity(), environment.getOwnerState(), environment.getTimeInterval());
             com.example.iot.po.User.Environment e=homeCondition.getEnvironment();
+            System.out.println("time is "+e.getTime());
             return Response.ResponseSuccess(homeCondition);
         }catch (Exception e){
             return Response.ResponseFail("自动操作失败");
