@@ -13,7 +13,7 @@ public class AutoOperateService {
 
     public Response autoOperate(String username, String time, String temperature, String humidity, String ownerState, String timeInterval){
         try {
-            autoOperateRepository.autoOperate(username, time, temperature, humidity, ownerState, timeInterval);
+//            autoOperateRepository.autoOperate(username, time, temperature, humidity, ownerState, timeInterval);
             return Response.ResponseSuccess(autoOperateRepository.getHomeCondition(username));
         }catch (Exception e){
             e.printStackTrace();

@@ -73,11 +73,11 @@ public class FaceRecService implements FaceRecognition {
 
             environmentRepository.changeHome(id,1);
 
-            sql="SELECT temperature FROM environment where id=\""+id+"\";";
+            sql="SELECT temperature FROM environment where userid=\""+id+"\";";
             List<String> temp=jdbcTemplate.queryForList(sql,String.class);
 
 
-            sql="SELECT humidity FROM environment where id=\""+id+"\";";
+            sql="SELECT humidity FROM environment where userid=\""+id+"\";";
             List<String> hum=jdbcTemplate.queryForList(sql,String.class);
 
             autoOperateService.autoOperate(username,time,String.valueOf(temp.get(0)),String.valueOf(hum.get(0)),"1",timeInterval);

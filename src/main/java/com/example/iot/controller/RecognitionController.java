@@ -15,7 +15,7 @@ public class RecognitionController {
     FaceRecognition faceRecognition;
 
     @CrossOrigin
-    @PostMapping(value = "/rec")
+    @PostMapping(value = "api/rec")
     @ResponseBody
     public Response rec(@RequestBody RecVO recVO){
         return Response.ResponseSuccess(faceRecognition.recognition_string(recVO.getState(),recVO.getUsername(),recVO.getTimeInterval(),recVO.getTime()));
