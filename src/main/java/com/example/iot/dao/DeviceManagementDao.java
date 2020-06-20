@@ -23,7 +23,8 @@ public class DeviceManagementDao implements DeviceManagementRepository {
     @Override
     public AddDeviceResponse addDevice(String type, String owner) {
         AddDeviceResponse adr=new AddDeviceResponse();
-        int id=jdbcTemplate.update("insert into device (`type`,`userId`) values (?,?)",type,owner);
+        String userid=jdbcTemplate.queryForObject("select id from uer where username = ?",String.class,owner);
+        int id=jdbcTemplate.update("insert into device (`type`,`userId`,`state`) values (?,?,?)",type,userid,0);
         adr.setId(String.valueOf(id));
         adr.setTypeid(type);
         return adr;
