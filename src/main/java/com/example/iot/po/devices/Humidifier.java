@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class Humidifier extends device{
-    String type="Humidifier";
+    String name="Humidifier";
     public Humidifier(String code,String deviceId){
         id=Integer.parseInt(deviceId);
         state=Integer.parseInt(code);

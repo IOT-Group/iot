@@ -29,7 +29,7 @@ public class UserDao implements UserRepository {
         int userId=jdbcTemplate.queryForObject("select id from user where username=?",Integer.class,username);
         environmentRepository.changeDegree(userId,25);
         environmentRepository.changeHumidity(userId,30);
-        environmentRepository.changeTime(userId,"0");
+        environmentRepository.changeTime(userId,0);
         environmentRepository.changeHome(userId,1);
         return true;
     }

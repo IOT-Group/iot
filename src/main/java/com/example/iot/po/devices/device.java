@@ -11,7 +11,7 @@ public class device {
     }
 
     int id=0;
-    String type="device";
+    String name="device";
 
     public void setState(int state) {
         this.state = state;

@@ -2,6 +2,7 @@ package com.example.iot.controller;
 
 import com.example.iot.service.FaceRecService;
 import com.example.iot.service.Recognition.FaceRecognition;
+import com.example.iot.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -15,8 +16,8 @@ public class RecognitionController {
     FaceRecognition faceRecognition;
 
     @RequestMapping("/rec")
-    public void rec(@RequestParam(value = "voiceInput",required = true) String Input, @RequestParam(value = "username",required = true) String username,@RequestParam(value = "timeInterval",required = true) String timeInterval){
-        faceRecognition.recognition_string(Input,username,timeInterval);
+    public Response rec(@RequestParam(value = "state",required = true) String state, @RequestParam(value = "username",required = true) String username,@RequestParam(value = "time",required = true) String time, @RequestParam(value = "timeInterval",required = true) String timeInterval){
+        return Response.ResponseSuccess(faceRecognition.recognition_string(state,username,timeInterval,time));
     }
 
 

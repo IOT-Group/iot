@@ -1,6 +1,8 @@
 package com.example.iot.dao;
 
 import com.example.iot.dao.Repository.DeviceManagementRepository;
+import com.example.iot.vo.AddDeviceResponse;
+import com.example.iot.vo.DeviceVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -19,14 +21,18 @@ public class DeviceManagementDao implements DeviceManagementRepository {
 
 
     @Override
-    public int addDevice(String type, String owner) {
+    public AddDeviceResponse addDevice(String type, String owner) {
+        AddDeviceResponse adr=new AddDeviceResponse();
         int id=jdbcTemplate.update("insert into device (`type`,`userId`) values (?,?)",type,owner);
-        return id;
+        adr.setId(String.valueOf(id));
+        adr.setTypeid(type);
+        return adr;
     }
 
     @Override
     public boolean deleteDevice(String deviceId) {
-        jdbcTemplate.update("delete from device deviceid=\""+ deviceId + "\"");
+        int id=Integer.parseInt(deviceId);
+        jdbcTemplate.update("delete from device where id=\""+ id + "\"");
         return true;
     }
 
@@ -34,6 +40,7 @@ public class DeviceManagementDao implements DeviceManagementRepository {
     public boolean operateDevice(String time, String code, String deviceId) {
         int now=Integer.parseInt(time);
         int gap=now-latesttime;         //上次操作距这次操作的时间，用于决定设备运行的效果
+        latesttime=now;
         int flag=0;       //默认运行设备列表中无当前操作设备
         for (com.example.iot.po.devices.device device : runningdevices) {
             device.update(gap);
@@ -41,23 +48,36 @@ public class DeviceManagementDao implements DeviceManagementRepository {
         for(com.example.iot.po.devices.device device : runningdevices){
             if(device.getId()==Integer.parseInt(deviceId)){
                 device.setState(Integer.parseInt(code));
-                flag=1;
+                flag=1;  //运行设备列表中找到当前操作设备
             }
         }
         if(flag==0){
             device d1=new device();
-            String type=jdbcTemplate.queryForObject("select type from device where id= ?",String.class,deviceId);
-            switch (type){
-                case "AirConditioner":d1=new AirConditioner(code,deviceId);break;
-                case "Light":d1=new Light(code,deviceId);break;
-                case "Curtain":d1=new Curtain(code, deviceId);break;
-                case "Humidifier":d1=new Humidifier(code, deviceId);break;
-                case "TV":d1=new TV(code, deviceId);break;
-                case "Box":d1=new Box(code, deviceId);break;
+            int id=Integer.parseInt(deviceId);
+            String type=jdbcTemplate.queryForObject("select type from device where id= ?",String.class,id);
+            assert type != null;
+            if(type.startsWith("A")){
+                    d1=new AirConditioner(code,deviceId);
+                }
+
+                else if(type.startsWith("L")) {
+                    d1 = new Light(code, deviceId);
+                }
+                else if(type.startsWith("C")) {
+                    d1 = new Curtain(code, deviceId);
+                }
+                else if(type.startsWith("H")) {
+                    d1 = new Humidifier(code, deviceId);
+                }
+                else if(type.startsWith("T")) {
+                    d1 = new TV(code, deviceId);
+                }
+                else if(type.startsWith("B")) {
+                    d1 = new Box(code, deviceId);
             }
-            runningdevices.add(d1);
+            runningdevices.add(d1);   //新增运行状态设备
         }
-        String userid=jdbcTemplate.queryForObject("select userId from device where id=?",String.class,deviceId);
+        int userid=Integer.parseInt(jdbcTemplate.queryForObject("select userId from device where id=?",String.class,deviceId));
         String temperature=jdbcTemplate.queryForObject("select temperature from environment where userid=?",String.class,userid);
         String humidity=jdbcTemplate.queryForObject("select humidity from environment where userid=?",String.class,userid);
         jdbcTemplate.update("insert into operation (deviceid,`time`,code,temperature,humidity)value (?,?,?,?,?)",deviceId,time,code,temperature,humidity);
