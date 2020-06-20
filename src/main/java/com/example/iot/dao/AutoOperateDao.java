@@ -58,7 +58,7 @@ public class AutoOperateDao implements AutoOperateRepository {
         }catch (EmptyResultDataAccessException e) {
             System.out.println("no device calendar atTime:"+time);
         }
-        //System.out.println(calendars.size());
+        System.out.println("calendar size is "+calendars.size());
         if(calendars.size()!=0){     //若该时间段内有日程表，则调用操控设备的接口
             for(int i=0;i<calendars.size();i++){
                 Calendar calendar=calendars.get(i);
@@ -68,7 +68,9 @@ public class AutoOperateDao implements AutoOperateRepository {
 
         //根据分析的用户数据，判断在该环境下是否需要自动操控设备。
         List<Analyze> analyzes=jdbcTemplate.query("select d.type,T.deviceid,T.condition,T.state from device d ,(select * from `analyze` a where a.deviceid in (select device.id from device,(select id from user where username=?)T1 where userId=T1.id))T where d.id=T.deviceid;",new AnalyzeMapper(),username);
+        System.out.println("analyzes size is "+analyzes.size());
         for(int i=0;i<analyzes.size();i++){
+            System.out.println("Auto...");
             Analyze analyze=analyzes.get(i);
             String type=analyze.getDeviceType().substring(0,1);
             if(type.equals("A")){   //空调

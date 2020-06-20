@@ -94,7 +94,7 @@ public class DeviceManagementDao implements DeviceManagementRepository {
                 if(device.getId()==Integer.parseInt(deviceId)){
                     device.setState(Integer.parseInt(code));
                     int id=Integer.parseInt(deviceId);
-                    System.out.println(code+"  "+id);
+                    //System.out.println(code+"  "+id);
                     jdbcTemplate.update("update device set state =? where id= ?",code,id);
                     flag=1;  //运行设备列表中找到当前操作设备
                 }
@@ -115,6 +115,7 @@ public class DeviceManagementDao implements DeviceManagementRepository {
                     d1 = new Curtain(code, deviceId);
                 }
                 else if(type.startsWith("H")) {
+                    System.out.println("add Humidifier");
                     d1 = new Humidifier(code, deviceId);
                 }
                 else if(type.startsWith("T")) {
@@ -124,6 +125,7 @@ public class DeviceManagementDao implements DeviceManagementRepository {
                     d1 = new Box(code, deviceId);
             }
             runningdevices.add(d1);   //新增运行状态设备
+            System.out.println(code+"  "+id);
             jdbcTemplate.update("update device set state =? where id= ?",code,id);
         }
         int userid=Integer.parseInt(jdbcTemplate.queryForObject("select userId from device where id=?",String.class,deviceId));
