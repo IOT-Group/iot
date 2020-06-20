@@ -61,7 +61,8 @@ public class DeviceManagementDao implements DeviceManagementRepository {
     public AddDeviceResponse addDevice(String type, String owner) {
         AddDeviceResponse adr=new AddDeviceResponse();
         String userid=jdbcTemplate.queryForObject("select id from user where username = ?",String.class,owner);
-        int id=jdbcTemplate.update("insert into device (`type`,`userId`,`state`) values (?,?,?)",type,userid,"0");
+        jdbcTemplate.update("insert into device (`type`,`userId`,`state`) values (?,?,?)",type,userid,"0");
+        int id=jdbcTemplate.queryForObject("select max(id) from device",Integer.class);
         adr.setId(String.valueOf(id));
         adr.setTypeid(type);
         return adr;
@@ -121,6 +122,7 @@ public class DeviceManagementDao implements DeviceManagementRepository {
                     d1 = new Box(code, deviceId);
             }
             runningdevices.add(d1);   //新增运行状态设备
+            jdbcTemplate.update("update device set state =? where id= ?",code,id);
         }
         int userid=Integer.parseInt(jdbcTemplate.queryForObject("select userId from device where id=?",String.class,deviceId));
         String temperature=jdbcTemplate.queryForObject("select temperature from environment where userid=?",String.class,userid);
