@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("api/device")
 public class DeviceManagementController {
     @Autowired
     DeviceManagementService deviceManagementService;
@@ -29,8 +28,8 @@ public class DeviceManagementController {
     @CrossOrigin
     @PostMapping(value = "api/deleteDevice")
     @ResponseBody
-    public Response deleteDevice(@RequestParam(value ="deviceId",required = true)String deviceId){
-        boolean result=deviceManagementService.deleteDevice(deviceId);
+    public Response deleteDevice(@RequestBody DeviceVO deviceVO){
+        boolean result=deviceManagementService.deleteDevice(deviceVO.getId());
         return Response.ResponseSuccess(result);
     }
 
