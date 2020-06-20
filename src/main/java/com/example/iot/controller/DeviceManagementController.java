@@ -43,6 +43,7 @@ public class DeviceManagementController {
     @PostMapping(value = "api/operateDevice")
     @ResponseBody
     public Response operateDevice(@RequestBody Operation operation){
+        System.out.println(operation.getTime()+" "+operation.getCode()+" "+operation.getDeviceId());
         boolean result=deviceManagementService.operateDevice(operation.getTime(),operation.getCode(),operation.getDeviceId());
         return Response.ResponseSuccess(result);
     }
