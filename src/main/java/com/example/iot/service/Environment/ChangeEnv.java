@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ChangeEnv {
     public Environment analyseInpput(String username, String type, String ins);
+    public Environment getEnv(String username);
 }
