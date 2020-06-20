@@ -14,7 +14,7 @@ public class AirConditioner extends device{
 
     }
     @Autowired
-    private JdbcTemplate jdbcTemplate = new JdbcTemplate();
+    private JdbcTemplate jdbcTemplate;
 
     @Override
     public void update(int time) {

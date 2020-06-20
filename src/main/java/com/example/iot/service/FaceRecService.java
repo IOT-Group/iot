@@ -38,7 +38,7 @@ public class FaceRecService implements FaceRecognition {
     @Override
     public HomeCondition recognition_string(String input, String username, String timeInterval,String time) {
         //出家门情况
-        if(input=="0"){
+        if(input.equals("0")){
 
 
             String sql="SELECT id from user where username='"+username+"'";

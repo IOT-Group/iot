@@ -16,7 +16,7 @@ public class VoiceController {
     AnalyzeVoice analyzeVoice;
 
     @CrossOrigin
-    @PostMapping(value = "/voice")
+    @PostMapping(value = "api/voice")
     @ResponseBody
     public Response analyzeVoice(@RequestBody VoiceVO voice){
         return Response.ResponseSuccess(analyzeVoice.analyzeVoice(voice.getVoiceInput(),voice.getUsername(),voice.getTime()));
