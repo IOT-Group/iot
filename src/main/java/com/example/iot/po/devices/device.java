@@ -17,7 +17,11 @@ public class device {
         this.state = state;
     }
 
-    int state;
+    public int getState() {
+        return state;
+    }
+
+    int state=0;
     public device(String code,String deviceId){
         id=Integer.parseInt(deviceId);
         state=Integer.parseInt(code);

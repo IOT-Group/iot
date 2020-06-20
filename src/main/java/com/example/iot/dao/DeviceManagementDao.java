@@ -43,7 +43,9 @@ public class DeviceManagementDao implements DeviceManagementRepository {
         latesttime=now;
         int flag=0;       //默认运行设备列表中无当前操作设备
         for (com.example.iot.po.devices.device device : runningdevices) {
-            device.update(gap);
+            if(device.getState()!=0){
+                device.update(gap);
+            }
         }
         for(com.example.iot.po.devices.device device : runningdevices){
             if(device.getId()==Integer.parseInt(deviceId)){
