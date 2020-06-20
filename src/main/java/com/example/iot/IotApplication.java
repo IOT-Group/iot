@@ -6,7 +6,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.example.iot.dao","com.example.iot.config",
-        "com.example.iot.controller","com.example.iot.service"})
+        "com.example.iot.controller","com.example.iot.service","com.example.iot.po"})
 public class IotApplication {
 
     public static void main(String[] args) {

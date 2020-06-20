@@ -1,5 +1,8 @@
 package com.example.iot.po.devices;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class device {
 
     public device() {

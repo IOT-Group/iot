@@ -20,6 +20,7 @@ public class AutoOperateController {
     public Response autoOperate(@RequestBody Environment environment){
         try {
             System.out.println("autoOperate controller");
+            System.out.println("OwnerState is "+environment.getOwnerState());
             HomeCondition homeCondition=autoOperateService.autoOperate(environment.getUsername(), environment.getTime(), environment.getTemperature(), environment.getHumidity(), environment.getOwnerState(), environment.getTimeInterval());
             com.example.iot.po.User.Environment e=homeCondition.getEnvironment();
             System.out.println("time is "+e.getTime());

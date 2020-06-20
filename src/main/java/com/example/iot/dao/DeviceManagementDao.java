@@ -134,7 +134,7 @@ public class DeviceManagementDao implements DeviceManagementRepository {
         int userid=Integer.parseInt(jdbcTemplate.queryForObject("select userId from device where id=?",String.class,deviceId));
         String temperature=jdbcTemplate.queryForObject("select temperature from environment where userid=?",String.class,userid);
         String humidity=jdbcTemplate.queryForObject("select humidity from environment where userid=?",String.class,userid);
-        if(oldState!=code) {
+        if(!oldState.equals(code)) {
             jdbcTemplate.update("insert into operation (deviceid,`time`,code,temperature,humidity)value (?,?,?,?,?)", deviceId, time, code, temperature, humidity);
         }
         return true;

@@ -13,7 +13,11 @@ public class AutoOperateService {
 
 
     public HomeCondition autoOperate(String username, String time, String temperature, String humidity, String ownerState, String timeInterval){
-        autoOperateRepository.autoOperate(username, time, temperature, humidity, ownerState, timeInterval);
+        try {
+            autoOperateRepository.autoOperate(username, time, temperature, humidity, ownerState, timeInterval);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return autoOperateRepository.getHomeCondition(username);
     }
 }
