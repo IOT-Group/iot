@@ -27,7 +27,13 @@ public class DeviceManagementDao implements DeviceManagementRepository {
         runningdevices=jdbcTemplate.query("select id , state from device where state !='0';",new deviceMapper());
         for (device d1: runningdevices) {
                 int id=d1.getId();
-                String type=jdbcTemplate.queryForObject("select type from device where id= ?",String.class,id);
+                String type="";
+                try{
+                    type=jdbcTemplate.queryForObject("select type from device where id= ?",String.class,id);
+                }catch (Exception e){
+                    System.out.println("没有正在运行的设备");
+                }
+
                 assert type != null;
                 if(type.startsWith("A")){
                     d1=new AirConditioner(String.valueOf(d1.getState()),String.valueOf(d1.getState()));

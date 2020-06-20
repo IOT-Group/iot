@@ -29,7 +29,6 @@ public class AnalyzeDao implements AnalyzeRepository {
     }
 
     public void analyzeCurtain(String deviceId,String code){    //分析窗帘
-        System.out.println("Start analyzeCurtain...");
         //String operation=code.split("_")[1];        //可能是PowerOn或PowerOff
         String sql="select time from operation where deviceid=\""+deviceId+"\" and code =\""+code+"\";";
         List<Integer> times=jdbcTemplate.queryForList(sql, Integer.class);
@@ -61,7 +60,6 @@ public class AnalyzeDao implements AnalyzeRepository {
     }
 
     public void analyzeAirConditioner(String deviceId,String code){ //析用户在几度以上/以下的时候喜欢开空调，并且是开几度
-        System.out.println("Start analyzeAirConditioner...");
         //String operation=code.split("_")[1];
         if(!code.equals("0")) {       //只有是PowerOn才执行此分析
             String sql = "select code from operation where deviceid=\"" + deviceId + "\" and code !=\"0\";";  //寻找该设备的所有PowerOn的操作记录

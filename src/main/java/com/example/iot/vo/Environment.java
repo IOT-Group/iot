@@ -8,6 +8,9 @@ public class Environment {
     private String ownerState;
     private String timeInterval;
 
+    public Environment(){
+
+    }
 
     public Environment(String username, String time, String temperature, String humidity, String ownerState, String timeInterval) {
         this.username = username;
