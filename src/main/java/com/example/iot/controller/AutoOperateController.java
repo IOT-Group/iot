@@ -26,7 +26,7 @@ public class AutoOperateController {
             System.out.println(environment.getHumidity());
             System.out.println(environment.getOwnerState());
             System.out.println(environment.getTimeInterval());
-            HomeCondition homeCondition=autoOperateService.autoOperate(environment.getUsername(), environment.getTime(), environment.getTemperature(), environment.getHumidity(), "1", environment.getTimeInterval());
+            HomeCondition homeCondition=autoOperateService.autoOperate(environment.getUsername(), environment.getTime(), environment.getTemperature(), environment.getHumidity(), environment.getOwnerState(), environment.getTimeInterval());
             System.out.println(homeCondition.getDevices().size());
             com.example.iot.po.User.Environment e=homeCondition.getEnvironment();
             System.out.println(e.getTemperature());
