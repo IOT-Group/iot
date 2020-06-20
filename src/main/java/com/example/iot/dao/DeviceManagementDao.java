@@ -82,21 +82,23 @@ public class DeviceManagementDao implements DeviceManagementRepository {
         latesttime=now;
         int flag=0;       //默认运行设备列表中无当前操作设备
         if(gap>0) {
-            for (com.example.iot.po.devices.device device : runningdevices) {
-                if (device.getState() != 0) {
-                    device.update(gap);
+            if(runningdevices.size()!=0)
+                for (com.example.iot.po.devices.device device : runningdevices) {
+                    if (device.getState() != 0) {
+                        device.update(gap);
+                    }
+                }
+        }
+        if(runningdevices.size()!=0)
+            for(com.example.iot.po.devices.device device : runningdevices){
+                if(device.getId()==Integer.parseInt(deviceId)){
+                    device.setState(Integer.parseInt(code));
+                    int id=Integer.parseInt(deviceId);
+                    System.out.println(code+"  "+id);
+                    jdbcTemplate.update("update device set state =? where id= ?",code,id);
+                    flag=1;  //运行设备列表中找到当前操作设备
                 }
             }
-        }
-        for(com.example.iot.po.devices.device device : runningdevices){
-            if(device.getId()==Integer.parseInt(deviceId)){
-                device.setState(Integer.parseInt(code));
-                int id=Integer.parseInt(deviceId);
-                System.out.println(code+"  "+id);
-                jdbcTemplate.update("update device set state =? where id= ?",code,id);
-                flag=1;  //运行设备列表中找到当前操作设备
-            }
-        }
         if(flag==0){
             device d1=new device();
             int id=Integer.parseInt(deviceId);

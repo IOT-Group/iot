@@ -58,7 +58,7 @@ public class AutoOperateDao implements AutoOperateRepository {
         }catch (EmptyResultDataAccessException e) {
             System.out.println("no device calendar atTime:"+time);
         }
-        System.out.println(calendars.size());
+        //System.out.println(calendars.size());
         if(calendars.size()!=0){     //若该时间段内有日程表，则调用操控设备的接口
             for(int i=0;i<calendars.size();i++){
                 Calendar calendar=calendars.get(i);

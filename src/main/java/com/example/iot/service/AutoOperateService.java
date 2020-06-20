@@ -13,8 +13,7 @@ public class AutoOperateService {
 
 
     public HomeCondition autoOperate(String username, String time, String temperature, String humidity, String ownerState, String timeInterval){
-        //autoOperateRepository.autoOperate(username, time, temperature, humidity, ownerState, timeInterval);
-        System.out.println("autoOperate service");
+        autoOperateRepository.autoOperate(username, time, temperature, humidity, ownerState, timeInterval);
         return autoOperateRepository.getHomeCondition(username);
 
 
