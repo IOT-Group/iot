@@ -22,7 +22,9 @@ public class DeviceManagementService {
         return deviceManagementRepository.deleteDevice(deviceId);
     }
     public boolean operateDevice(String time,String code,String deviceId){
+
+        boolean result= deviceManagementRepository.operateDevice(time, code, deviceId);
         analyzeRepository.analyze(deviceId,code);
-        return deviceManagementRepository.operateDevice(time, code, deviceId);
+        return result;
     }
 }
