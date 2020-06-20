@@ -14,11 +14,10 @@ import java.util.List;
 @Repository
 public class DeviceManagementDao implements DeviceManagementRepository {
     int latesttime=0;
-    ArrayList<device> runningdevices=new ArrayList<>();
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
+    List<device> runningdevices=jdbcTemplate.query("select id and state from device where state !='0';",new deviceMapper());
 
     @Override
     public AddDeviceResponse addDevice(String type, String owner) {
