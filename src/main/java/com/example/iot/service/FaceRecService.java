@@ -1,5 +1,6 @@
 package com.example.iot.service;
 
+import com.example.iot.dao.Repository.EnvironmentRepository;
 import com.example.iot.dao.Repository.UserRepository;
 import com.example.iot.po.User.Device;
 import com.example.iot.po.User.Environment;
@@ -27,6 +28,9 @@ public class FaceRecService implements FaceRecognition {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    EnvironmentRepository environmentRepository;
+
 
     @Autowired
     DeviceManagementService deviceManagementService;
@@ -35,10 +39,13 @@ public class FaceRecService implements FaceRecognition {
     public HomeCondition recognition_string(String input, String username, String timeInterval,String time) {
         //出家门情况
         if(input=="0"){
+
+
             String sql="SELECT id from user where username='"+username+"'";
             List<String> user=jdbcTemplate.queryForList(sql,String.class);
 
             int id=Integer.valueOf(user.get(0));
+            environmentRepository.changeHome(id,0);
 
             sql="SELECT id from device where userId='"+id+"'";
             List<String> devices=jdbcTemplate.queryForList(sql,String.class);
@@ -64,6 +71,7 @@ public class FaceRecService implements FaceRecognition {
             //根据时间段判断是否打开电灯、窗帘，根据温度判断是否开空调，根据湿度判断是否开加湿器。
 
 
+            environmentRepository.changeHome(id,1);
 
             sql="SELECT temperature FROM environment where id=\""+id+"\";";
             List<String> temp=jdbcTemplate.queryForList(sql,String.class);

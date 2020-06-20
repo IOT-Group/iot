@@ -2,6 +2,7 @@ package com.example.iot.service;
 
 import com.example.iot.dao.Repository.EnvironmentRepository;
 import com.example.iot.po.User.Environment;
+import com.example.iot.po.User.EnvironmentMapper;
 import com.example.iot.po.User.HomeCondition;
 import com.example.iot.service.Environment.ChangeEnv;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,5 +69,11 @@ public class ChageEnvService implements ChangeEnv {
         return analyseIns(id,Integer.valueOf(type),Integer.valueOf(ins));
 
 
+    }
+
+    @Override
+    public Environment getEnv(String username) {
+        Environment environment=jdbcTemplate.queryForObject(" select time,temperature,humidity,ownerState from environment,(select id from user where username=?)T where environment.userid=T.id;",new EnvironmentMapper(),username);
+        return environment;
     }
 }
