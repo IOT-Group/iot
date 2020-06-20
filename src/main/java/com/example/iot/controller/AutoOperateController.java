@@ -17,7 +17,11 @@ public class AutoOperateController {
     @PostMapping(value = "api/sendEnvironment")
     @ResponseBody
     public Response autoOperate(@RequestBody Environment environment){
-        return autoOperateService.autoOperate(environment.getUsername(),environment.getTime(),environment.getTemperature(),environment.getHumidity(),environment.getOwnerState(),environment.getTimeInterval());
+        try {
+            return Response.ResponseSuccess(autoOperateService.autoOperate(environment.getUsername(), environment.getTime(), environment.getTemperature(), environment.getHumidity(), environment.getOwnerState(), environment.getTimeInterval()));
+        }catch (Exception e){
+            return Response.ResponseFail("自动操作失败");
+        }
 
     }
 }

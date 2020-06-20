@@ -8,6 +8,16 @@ public class Environment {
     private String ownerState;
     private String timeInterval;
 
+
+    public Environment(String username, String time, String temperature, String humidity, String ownerState, String timeInterval) {
+        this.username = username;
+        this.time = time;
+        this.temperature = temperature;
+        this.humidity = humidity;
+        this.ownerState = ownerState;
+        this.timeInterval = timeInterval;
+    }
+
     public String getUsername() {
         return username;
     }
