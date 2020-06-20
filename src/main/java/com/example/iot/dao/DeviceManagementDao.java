@@ -20,6 +20,34 @@ public class DeviceManagementDao implements DeviceManagementRepository {
     List<device> runningdevices=jdbcTemplate.query("select id and state from device where state !='0';",new deviceMapper());
 
     @Override
+    public boolean initialize(){
+        for (device d1: runningdevices) {
+                int id=d1.getId();
+                String type=jdbcTemplate.queryForObject("select type from device where id= ?",String.class,id);
+                assert type != null;
+                if(type.startsWith("A")){
+                    d1=new AirConditioner(String.valueOf(d1.getState()),String.valueOf(d1.getState()));
+                }
+
+                else if(type.startsWith("L")) {
+                    d1 = new Light(String.valueOf(d1.getState()),String.valueOf(d1.getState()));
+                }
+                else if(type.startsWith("C")) {
+                    d1 = new Curtain(String.valueOf(d1.getState()),String.valueOf(d1.getState()));
+                }
+                else if(type.startsWith("H")) {
+                    d1 = new Humidifier(String.valueOf(d1.getState()),String.valueOf(d1.getState()));
+                }
+                else if(type.startsWith("T")) {
+                    d1 = new TV(String.valueOf(d1.getState()),String.valueOf(d1.getState()));
+                }
+                else if(type.startsWith("B")) {
+                    d1 = new Box(String.valueOf(d1.getState()),String.valueOf(d1.getState()));
+                }
+        }
+        return true;
+    }
+    @Override
     public AddDeviceResponse addDevice(String type, String owner) {
         AddDeviceResponse adr=new AddDeviceResponse();
         String userid=jdbcTemplate.queryForObject("select id from user where username = ?",String.class,owner);
