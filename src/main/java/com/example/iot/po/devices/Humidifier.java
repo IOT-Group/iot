@@ -15,11 +15,11 @@ public class Humidifier extends device{
 
     @Override
     public void update(int time) {
-        int owner=jdbcTemplate.queryForObject("select  from device where id= ? ",Integer.class,id);
+        int owner=jdbcTemplate.queryForObject("select userId from device where id= ? ",Integer.class,id);
 
-        int hum=jdbcTemplate.queryForObject("select humidity from environment e and device d where d.id= ? and d.owner=e.owner",Integer.class,id);
+        int hum=jdbcTemplate.queryForObject("select humidity from environment where userid= ?",Integer.class,owner);
 
         hum= Math.min(100, hum + time);
-        jdbcTemplate.update("update  environment set temperature = ? where owner= ?",hum,owner);
+        jdbcTemplate.update("update  environment set humidity = ? where owner= ?",hum,owner);
     }
 }

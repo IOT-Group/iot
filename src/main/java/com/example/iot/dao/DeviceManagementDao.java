@@ -23,7 +23,8 @@ public class DeviceManagementDao implements DeviceManagementRepository {
     @Override
     public AddDeviceResponse addDevice(String type, String owner) {
         AddDeviceResponse adr=new AddDeviceResponse();
-        int id=jdbcTemplate.update("insert into device (`type`,`userId`) values (?,?)",type,owner);
+        String userid=jdbcTemplate.queryForObject("select id from user where username = ?",String.class,owner);
+        int id=jdbcTemplate.update("insert into device (`type`,`userId`,`state`) values (?,?,?)",type,userid,"0");
         adr.setId(String.valueOf(id));
         adr.setTypeid(type);
         return adr;
@@ -43,7 +44,9 @@ public class DeviceManagementDao implements DeviceManagementRepository {
         latesttime=now;
         int flag=0;       //默认运行设备列表中无当前操作设备
         for (com.example.iot.po.devices.device device : runningdevices) {
-            device.update(gap);
+            if(device.getState()!=0){
+                device.update(gap);
+            }
         }
         for(com.example.iot.po.devices.device device : runningdevices){
             if(device.getId()==Integer.parseInt(deviceId)){
