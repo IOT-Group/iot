@@ -42,7 +42,9 @@ public class UserDao implements UserRepository {
 
     @Override
     public List<Device> getUserDevice(String username){
+        System.out.println("getUserDevice");
         List<Device> devices=jdbcTemplate.query("select T2.*,d2.power,d2.voltage from devicetype d2,(select d1.id as deviceId,type,state from device d1,(select id from user where username=?)T1 where d1.userId=T1.id)T2 where T2.type=d2.name;",new DeviceMapper(),username);
+        System.out.println("end getUserDevice");
         return devices;
     }
 

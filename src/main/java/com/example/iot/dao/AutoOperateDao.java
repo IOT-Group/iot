@@ -100,8 +100,11 @@ public class AutoOperateDao implements AutoOperateRepository {
 
     @Override
     public HomeCondition getHomeCondition(String username){
+        System.out.println("getHomeCondition");
         Environment environment=jdbcTemplate.queryForObject(" select time,temperature,humidity,ownerState from environment,(select id from user where username=?)T where environment.userid=T.id;",new EnvironmentMapper(),username);
+        System.out.println("finish getEnvironment");
         List<Device> devices=userRepository.getUserDevice(username);
+        System.out.println("end getHomeCondition");
         return  new HomeCondition(environment,devices);
     }
 }
