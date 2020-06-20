@@ -15,7 +15,7 @@ public class EnvironmentController {
     ChangeEnv changeEnv;
 
     @CrossOrigin
-    @PostMapping(value = "Environment/change")
+    @PostMapping(value = "api/Environment/change")
     @ResponseBody
     public Response changeEnv(@RequestBody ChangeEnvVO changeEnvVO){
         return Response.ResponseSuccess(changeEnv.analyseInpput(changeEnvVO.getUsername(),changeEnvVO.getType(),changeEnvVO.getIns()));
@@ -23,7 +23,7 @@ public class EnvironmentController {
 
     //提供查询环境的接口
     @CrossOrigin
-    @PostMapping(value = "Environment/get")
+    @PostMapping(value = "api/Environment/get")
     @ResponseBody
     public Response getEnv(@RequestBody User user){
         return Response.ResponseSuccess(changeEnv.getEnv(user.getUsername()));
