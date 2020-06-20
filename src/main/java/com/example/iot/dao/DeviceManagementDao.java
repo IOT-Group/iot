@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import com.example.iot.po.devices.*;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,10 +18,13 @@ public class DeviceManagementDao implements DeviceManagementRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    List<device> runningdevices=jdbcTemplate.query("select id and state from device where state !='0';",new deviceMapper());
+
+    List<device> runningdevices;
+
 
     @Override
     public boolean initialize(){
+        runningdevices=jdbcTemplate.query("select id , state from device where state !='0';",new deviceMapper());
         for (device d1: runningdevices) {
                 int id=d1.getId();
                 String type=jdbcTemplate.queryForObject("select type from device where id= ?",String.class,id);
