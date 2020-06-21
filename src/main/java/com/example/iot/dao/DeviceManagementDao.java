@@ -29,6 +29,12 @@ public class DeviceManagementDao implements DeviceManagementRepository {
 
     @Override
     public boolean initialize(){
+//        airConditioners = new ArrayList<>();
+//        lights=new ArrayList<>();
+//        tvs=new ArrayList<>();
+//        curtains=new ArrayList<>();
+//        boxes=new ArrayList<>();
+//        humidifiers=new ArrayList<>();
         runningdevices=jdbcTemplate.query("select id , state from device where state !='0';",new deviceMapper());
 
         for (int i=0;i<runningdevices.size();i++) {

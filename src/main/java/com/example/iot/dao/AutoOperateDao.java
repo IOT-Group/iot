@@ -43,6 +43,8 @@ public class AutoOperateDao implements AutoOperateRepository {
 
         System.out.println("autoOperateDao time is "+time);
 
+        //deviceManagementRepository.initialize();
+
         //更新数据库环境
         int userId=jdbcTemplate.queryForObject("select id from user where username=?",Integer.class,username);
         environmentRepository.changeDegree(userId,Integer.parseInt(temperature));

@@ -36,7 +36,7 @@ public class Humidifier extends device{
 
     @Override
     public void update(int time) {
-        JdbcTemplate jdbcTemplate=getJdbcTemplate("root");
+        JdbcTemplate jdbcTemplate=getJdbcTemplate("19971204");
         int owner=jdbcTemplate.queryForObject("select userId from device where id= ? ",Integer.class,id);
 
         int hum=jdbcTemplate.queryForObject("select humidity from environment where userid= ?",Integer.class,owner);
