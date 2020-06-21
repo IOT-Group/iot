@@ -20,6 +20,7 @@ public class AirConditioner extends device{
     public AirConditioner(String code,String deviceId){
         id=Integer.parseInt(deviceId);
         state=Integer.parseInt(code);
+        System.out.println("pppppppppppppppppppppppppppppppppppppp"+state);
 
     }
     public JdbcTemplate getJdbcTemplate(String password){
@@ -34,17 +35,17 @@ public class AirConditioner extends device{
     @Override
     public void update(int time) {
         int settemp = 0;
-        JdbcTemplate jdbcTemplate=getJdbcTemplate("19971204");
+        JdbcTemplate jdbcTemplate=getJdbcTemplate("password");
         int owner=jdbcTemplate.queryForObject("select userId from device where id= ?",Integer.class,id);
 
         int temp=jdbcTemplate.queryForObject("select temperature from environment  where userid= ?",Integer.class,owner);
-        if(state>32){
+        if(state>100){
             settemp=state-16;
             temp= Math.min(settemp, temp + time / 2);
         }
         else {
             settemp=state;
-            temp= Math.max(settemp, temp - time / 2);
+            temp= Math.max(settemp, temp - time / 2-temp/60*time);
         }
         jdbcTemplate.update("update  environment set temperature = ? where userid= ?",temp,owner);
     }

@@ -18,42 +18,47 @@ public class DeviceManagementDao implements DeviceManagementRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    List<device> runningdevices = new ArrayList<device>();
+    List<device>runningdevices=new ArrayList<>();
+    List<AirConditioner> airConditioners = new ArrayList<>();
+    List<Light>lights=new ArrayList<>();
+    List<TV>tvs=new ArrayList<>();
+    List<Curtain>curtains=new ArrayList<>();
+    List<Box>boxes=new ArrayList<>();
+    List<Humidifier>humidifiers=new ArrayList<>();
 
 
     @Override
     public boolean initialize(){
         runningdevices=jdbcTemplate.query("select id , state from device where state !='0';",new deviceMapper());
-        for (device d1: runningdevices) {
-                int id=d1.getId();
-                String type="";
-                try{
-                    type=jdbcTemplate.queryForObject("select type from device where id= ?",String.class,id);
-                }catch (Exception e){
-                    System.out.println("没有正在运行的设备");
-                }
 
-                assert type != null;
-                if(type.startsWith("A")){
-                    d1=new AirConditioner(String.valueOf(d1.getState()),String.valueOf(d1.getState()));
-                }
+        for (int i=0;i<runningdevices.size();i++) {
+            int id=runningdevices.get(i).getId();
+            String type="";
+            try{
+                type=jdbcTemplate.queryForObject("select type from device where id= ?",String.class,id);
+            }catch (Exception e){
+                System.out.println("没有正在运行的设备");
+            }
+            assert type != null;
+            if(type.startsWith("A")){
+                airConditioners.add(new AirConditioner(String.valueOf(runningdevices.get(i).getState()),String.valueOf(runningdevices.get(i).getState())));
+            }
 
-                else if(type.startsWith("L")) {
-                    d1 = new Light(String.valueOf(d1.getState()),String.valueOf(d1.getState()));
-                }
-                else if(type.startsWith("C")) {
-                    d1 = new Curtain(String.valueOf(d1.getState()),String.valueOf(d1.getState()));
-                }
-                else if(type.startsWith("H")) {
-                    d1 = new Humidifier(String.valueOf(d1.getState()),String.valueOf(d1.getState()));
-                }
-                else if(type.startsWith("T")) {
-                    d1 = new TV(String.valueOf(d1.getState()),String.valueOf(d1.getState()));
-                }
-                else if(type.startsWith("B")) {
-                    d1 = new Box(String.valueOf(d1.getState()),String.valueOf(d1.getState()));
-                }
+            else if(type.startsWith("L")) {
+                lights.add(new Light(String.valueOf(runningdevices.get(i).getState()),String.valueOf(runningdevices.get(i).getState())));
+            }
+            else if(type.startsWith("C")) {
+                curtains.add(new Curtain(String.valueOf(runningdevices.get(i).getState()),String.valueOf(runningdevices.get(i).getState())));
+            }
+            else if(type.startsWith("H")) {
+                humidifiers.add(new Humidifier(String.valueOf(runningdevices.get(i).getState()),String.valueOf(runningdevices.get(i).getState())));
+            }
+            else if(type.startsWith("T")) {
+                tvs.add(new TV(String.valueOf(runningdevices.get(i).getState()),String.valueOf(runningdevices.get(i).getState())));
+            }
+            else if(type.startsWith("B")) {
+                boxes.add(new Box(String.valueOf(runningdevices.get(i).getState()),String.valueOf(runningdevices.get(i).getState())));
+            }
         }
         return true;
     }
@@ -83,51 +88,108 @@ public class DeviceManagementDao implements DeviceManagementRepository {
         latesttime=now;
         int flag=0;       //默认运行设备列表中无当前操作设备
         if(gap>0) {
-            if(runningdevices.size()!=0)
-                for (com.example.iot.po.devices.device device : runningdevices) {
-                    if (device.getState() != 0) {
-                        device.update(gap);
+            if(airConditioners.size()!=0)
+                for (com.example.iot.po.devices.AirConditioner a : airConditioners) {
+                    if (a.getState()!= 0) {
+                        a.update(gap);
+                    }
+                    if(a.getId()==Integer.parseInt(deviceId)){
+                        a.setState(Integer.parseInt(code));
+                        flag=1;
+                        int id=Integer.parseInt(deviceId);
+                        oldState=jdbcTemplate.queryForObject("select state from device where id= ?",String.class,id);
+                        jdbcTemplate.update("update device set state =? where id= ?",code,id);
                     }
                 }
-        }
-        if(runningdevices.size()!=0)
-            for(com.example.iot.po.devices.device device : runningdevices){
-                if(device.getId()==Integer.parseInt(deviceId)){
-                    device.setState(Integer.parseInt(code));
-                    int id=Integer.parseInt(deviceId);
-
-                    oldState=jdbcTemplate.queryForObject("select state from device where id= ?",String.class,id);
-
-                    jdbcTemplate.update("update device set state =? where id= ?",code,id);
-                    flag=1;  //运行设备列表中找到当前操作设备
+            if(lights.size()!=0)
+                for (com.example.iot.po.devices.Light a : lights) {
+                    if (a.getState()!= 0) {
+                        a.update(gap);
+                    }
+                    if(a.getId()==Integer.parseInt(deviceId)){
+                        a.setState(Integer.parseInt(code));
+                        flag=1;
+                        int id=Integer.parseInt(deviceId);
+                        oldState=jdbcTemplate.queryForObject("select state from device where id= ?",String.class,id);
+                        jdbcTemplate.update("update device set state =? where id= ?",code,id);
+                    }
                 }
-            }
+            if(curtains.size()!=0)
+                for (com.example.iot.po.devices.Curtain a : curtains) {
+                    if (a.getState()!= 0) {
+                        a.update(gap);
+                    }
+                    if(a.getId()==Integer.parseInt(deviceId)){
+                        a.setState(Integer.parseInt(code));
+                        flag=1;
+                        int id=Integer.parseInt(deviceId);
+                        oldState=jdbcTemplate.queryForObject("select state from device where id= ?",String.class,id);
+                        jdbcTemplate.update("update device set state =? where id= ?",code,id);
+                    }
+                }
+            if(humidifiers.size()!=0)
+                for (com.example.iot.po.devices.Humidifier a : humidifiers) {
+                    if (a.getState()!= 0) {
+                        a.update(gap);
+                    }
+                    if(a.getId()==Integer.parseInt(deviceId)){
+                        a.setState(Integer.parseInt(code));
+                        flag=1;
+                        int id=Integer.parseInt(deviceId);
+                        oldState=jdbcTemplate.queryForObject("select state from device where id= ?",String.class,id);
+                        jdbcTemplate.update("update device set state =? where id= ?",code,id);
+                    }
+                }
+            if(tvs.size()!=0)
+                for (com.example.iot.po.devices.TV a : tvs) {
+                    if (a.getState()!= 0) {
+                        a.update(gap);
+                    }
+                    if(a.getId()==Integer.parseInt(deviceId)){
+                        a.setState(Integer.parseInt(code));
+                        flag=1;
+                        int id=Integer.parseInt(deviceId);
+                        oldState=jdbcTemplate.queryForObject("select state from device where id= ?",String.class,id);
+                        jdbcTemplate.update("update device set state =? where id= ?",code,id);
+                    }
+                }
+            if(boxes.size()!=0)
+                for (com.example.iot.po.devices.Box a : boxes) {
+                    if (a.getState()!= 0) {
+                        a.update(gap);
+                    }
+                    if(a.getId()==Integer.parseInt(deviceId)){
+                        a.setState(Integer.parseInt(code));
+                        flag=1;
+                        int id=Integer.parseInt(deviceId);
+                        oldState=jdbcTemplate.queryForObject("select state from device where id= ?",String.class,id);
+                        jdbcTemplate.update("update device set state =? where id= ?",code,id);
+                    }
+                }
+        }        //各类设备更新
         if(flag==0){
-            device d1=new device();
             int id=Integer.parseInt(deviceId);
             String type=jdbcTemplate.queryForObject("select type from device where id= ?",String.class,id);
             assert type != null;
             if(type.startsWith("A")){
-                    d1=new AirConditioner(code,deviceId);
-                }
-
-                else if(type.startsWith("L")) {
-                    d1 = new Light(code, deviceId);
-                }
-                else if(type.startsWith("C")) {
-                    d1 = new Curtain(code, deviceId);
-                }
-                else if(type.startsWith("H")) {
-                    System.out.println("add Humidifier");
-                    d1 = new Humidifier(code, deviceId);
-                }
-                else if(type.startsWith("T")) {
-                    d1 = new TV(code, deviceId);
-                }
-                else if(type.startsWith("B")) {
-                    d1 = new Box(code, deviceId);
+                airConditioners.add(new AirConditioner(code,deviceId));
             }
-            runningdevices.add(d1);   //新增运行状态设备
+
+            else if(type.startsWith("L")) {
+                lights.add(new Light(code,deviceId));
+            }
+            else if(type.startsWith("C")) {
+                curtains.add(new Curtain(code, deviceId));
+            }
+            else if(type.startsWith("H")) {
+                humidifiers.add(new Humidifier(code,deviceId));
+            }
+            else if(type.startsWith("T")) {
+                tvs.add(new TV(code,deviceId));
+            }
+            else if(type.startsWith("B")) {
+                boxes.add(new Box(code,deviceId));
+            }
             oldState=jdbcTemplate.queryForObject("select state from device where id= ?",String.class,id);
             jdbcTemplate.update("update device set state =? where id= ?",code,id);
         }
