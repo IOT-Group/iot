@@ -111,6 +111,8 @@ public class AutoOperateDao implements AutoOperateRepository {
             }
 
         }
+        if(analyzes.size()==0)
+            deviceManagementRepository.operateDevice(time,"","");
     }
 
     @Override
