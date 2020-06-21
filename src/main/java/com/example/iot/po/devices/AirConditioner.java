@@ -35,7 +35,7 @@ public class AirConditioner extends device{
     @Override
     public void update(int time) {
         int settemp = 0;
-        JdbcTemplate jdbcTemplate=getJdbcTemplate("password");
+        JdbcTemplate jdbcTemplate=getJdbcTemplate("root");
         int owner=jdbcTemplate.queryForObject("select userId from device where id= ?",Integer.class,id);
 
         int temp=jdbcTemplate.queryForObject("select temperature from environment  where userid= ?",Integer.class,owner);

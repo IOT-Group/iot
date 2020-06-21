@@ -82,12 +82,19 @@ public class DeviceManagementDao implements DeviceManagementRepository {
 
     @Override
     public boolean operateDevice(String time, String code, String deviceId) {
+        //判断是否有设备是要自动操控，若是，则不把操控的记录放入operation表里
+        boolean isAutoOperation=false;
+        if((!code.equals(""))&&code.substring(0,1).equals("A")){
+            isAutoOperation=true;
+            code=code.substring(1);
+        }
         String oldState="";
         int now=Integer.parseInt(time);
         int gap=now-latesttime;         //上次操作距这次操作的时间，用于决定设备运行的效果
         latesttime=now;
         int flag=0;       //默认运行设备列表中无当前操作设备
-        if(gap>0) {
+        //if(gap>0&&!deviceId.equals("")) {
+        if(gap>0){
             if(airConditioners.size()!=0)
                 for (com.example.iot.po.devices.AirConditioner a : airConditioners) {
                     if (a.getState()!= 0) {
@@ -167,38 +174,36 @@ public class DeviceManagementDao implements DeviceManagementRepository {
                     }
                 }
         }        //各类设备更新
-        if(flag==0){
-            int id=Integer.parseInt(deviceId);
-            String type=jdbcTemplate.queryForObject("select type from device where id= ?",String.class,id);
-            assert type != null;
-            if(type.startsWith("A")){
-                airConditioners.add(new AirConditioner(code,deviceId));
+        //if(!deviceId.equals("")) {
+            if (flag == 0) {
+                int id = Integer.parseInt(deviceId);
+                String type = jdbcTemplate.queryForObject("select type from device where id= ?", String.class, id);
+                assert type != null;
+                if (type.startsWith("A")) {
+                    airConditioners.add(new AirConditioner(code, deviceId));
+                } else if (type.startsWith("L")) {
+                    lights.add(new Light(code, deviceId));
+                } else if (type.startsWith("C")) {
+                    curtains.add(new Curtain(code, deviceId));
+                } else if (type.startsWith("H")) {
+                    humidifiers.add(new Humidifier(code, deviceId));
+                } else if (type.startsWith("T")) {
+                    tvs.add(new TV(code, deviceId));
+                } else if (type.startsWith("B")) {
+                    boxes.add(new Box(code, deviceId));
+                }
+                oldState = jdbcTemplate.queryForObject("select state from device where id= ?", String.class, id);
+                jdbcTemplate.update("update device set state =? where id= ?", code, id);
             }
+            int userid = Integer.parseInt(jdbcTemplate.queryForObject("select userId from device where id=?", String.class, deviceId));
 
-            else if(type.startsWith("L")) {
-                lights.add(new Light(code,deviceId));
+            String temperature = jdbcTemplate.queryForObject("select temperature from environment where userid=?", String.class, userid);
+            String humidity = jdbcTemplate.queryForObject("select humidity from environment where userid=?", String.class, userid);
+
+            if (!oldState.equals(code) && !isAutoOperation) {
+                jdbcTemplate.update("insert into operation (deviceid,`time`,code,temperature,humidity)value (?,?,?,?,?)", deviceId, time, code, temperature, humidity);
             }
-            else if(type.startsWith("C")) {
-                curtains.add(new Curtain(code, deviceId));
-            }
-            else if(type.startsWith("H")) {
-                humidifiers.add(new Humidifier(code,deviceId));
-            }
-            else if(type.startsWith("T")) {
-                tvs.add(new TV(code,deviceId));
-            }
-            else if(type.startsWith("B")) {
-                boxes.add(new Box(code,deviceId));
-            }
-            oldState=jdbcTemplate.queryForObject("select state from device where id= ?",String.class,id);
-            jdbcTemplate.update("update device set state =? where id= ?",code,id);
-        }
-        int userid=Integer.parseInt(jdbcTemplate.queryForObject("select userId from device where id=?",String.class,deviceId));
-        String temperature=jdbcTemplate.queryForObject("select temperature from environment where userid=?",String.class,userid);
-        String humidity=jdbcTemplate.queryForObject("select humidity from environment where userid=?",String.class,userid);
-        if(!oldState.equals(code)) {
-            jdbcTemplate.update("insert into operation (deviceid,`time`,code,temperature,humidity)value (?,?,?,?,?)", deviceId, time, code, temperature, humidity);
-        }
+      //  }
         return true;
     }
 }

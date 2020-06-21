@@ -1,5 +1,6 @@
 package com.example.iot.service;
 
+import com.example.iot.dao.Repository.DeviceManagementRepository;
 import com.example.iot.dao.Repository.EnvironmentRepository;
 import com.example.iot.dao.Repository.UserRepository;
 import com.example.iot.po.User.Device;
@@ -33,7 +34,7 @@ public class FaceRecService implements FaceRecognition {
 
 
     @Autowired
-    DeviceManagementService deviceManagementService;
+    DeviceManagementRepository deviceManagementRepository;
 
     @Override
     public HomeCondition recognition_string(String input, String username, String timeInterval,String time) {
@@ -52,7 +53,7 @@ public class FaceRecService implements FaceRecognition {
 
             //调用关闭空调，电视机，电灯，音箱，加湿器
             for(int i=0;i<devices.size();i++) {
-                deviceManagementService.operateDevice(time, "0", devices.get(i));
+                deviceManagementRepository.operateDevice(time, "0", devices.get(i));
             }
 
             Environment environment=jdbcTemplate.queryForObject(" select time,temperature,humidity,ownerState from environment,(select id from user where username=?)T where environment.userid=T.id;",new EnvironmentMapper(),username);
